@@ -1,0 +1,348 @@
+<div class="container-fluid" [formGroup]="formGroup">
+
+  <input type="hidden" [formControlName]="modelIdPropertyName" />
+  <input type="hidden" formControlName="medicalReport" />
+  <input type="hidden" formControlName="type" />
+  <input type="hidden" formControlName="createdAt" />
+  <input type="hidden" formControlName="saleDetailId" />
+  <input type="hidden" formControlName="active" />
+
+  <div class="row">
+    <div class="col-12">
+
+      <div class="card-patient">
+        <div class="card-body">
+          <p-tabView>
+
+            <p-tabPanel>
+              <ng-template pTemplate="header">
+                <i class="fa fa-user"></i>
+                <span class="ml-2">Datos del paciente</span>
+              </ng-template>
+
+              <div class="row" *ngIf="( detailInfo$ | async) == null">
+                <div class="col-12">
+                  <div class="alert alert-warning">
+                    <strong>Cargando...</strong>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row" *ngIf="( detailInfo$ | async) != null">
+                <div class="col-md-6 col-sm-12">
+                  <strong>Apellido(s) y nombre(s)</strong><br>
+                  <span>
+                    {{ ( detailInfo$ | async)?.patient?.firstName }}
+                    {{ ( detailInfo$ | async)?.patient?.firstSurname }}
+                  </span>
+                </div>
+
+                <div class="col-md-2 col-sm-6">
+                  <strong>Género</strong><br>
+                  <span>
+                    {{ ( detailInfo$ | async)?.patient?.gender == "M" ? "Masculino" : "Femenino" }}
+                  </span>
+                </div>
+
+                <div class="col-md-2 col-sm-6">
+                  <strong>Nro. historia</strong><br>
+                  <span class="badge badge-success">
+                    {{ ( detailInfo$ | async)?.patient?.historyNumber }}
+                  </span>
+                </div>
+
+                <div class="col-md-2 col-sm-6">
+                  <strong>Edad</strong><br>
+                  <span>
+                    {{ showAge(( detailInfo$ | async)?.patient?.birthDate) }}
+                  </span>
+                </div>
+              </div>
+            </p-tabPanel>
+
+            <p-tabPanel>
+              <ng-template pTemplate="header">
+                <i class="fa fa-user-md"></i>
+                <span class="ml-2">Historial Méd</span>
+              </ng-template>
+
+
+              <app-card cardClass="card-datatable" [options]="false" [customHeader]="true">
+
+                <div class="app-card-header">
+                  <h5>Enfermedades y/o alergías</h5>
+
+                  <div class="card-header-right">
+                    <button type="button" class="btn btn-xs btn-primary" (click)="newAffectionPatient()">
+                      <span><i class="fa fa-plus"></i> Añadir</span>
+                    </button>
+                  </div>
+                </div>
+
+
+                <div class="dt-responsive">
+                  <ui-admin-table #adminTable (refresh)="onRefresh($event)" [apiRecords]="(records$ | async)"
+                    [pageSize]="15">
+                    <ng-template #contentFiltered>
+
+                    </ng-template>
+
+                    <p-table>
+                      <ng-template pTemplate="header">
+                        <tr>
+                          <th scope="col">Nombre</th>
+                          <th scope="col">Descripción</th>
+                          <th scope="col" style="width: 15%" class="text-center">
+                            Acciones
+                          </th>
+                        </tr>
+                      </ng-template>
+
+                      <ng-template pTemplate="body" let-row>
+                        <tr [pContextMenuRow]="row" [pSelectableRow]="row">
+                          <td>
+                            <span class="badge badge-primary">
+                              {{ row.name }}
+                            </span>
+                          </td>
+                          <td>{{ row.description }}</td>
+                          <td class="text-center">
+                            <button type="button" class="btn btn-sm btn-icon btn-success"
+                              (click)="editAffectionPatient(row)" ngbPopover="Editar"
+                              triggers="mouseenter:mouseleave"><i class="feather icon-check-circle"></i></button>
+                          </td>
+                        </tr>
+                      </ng-template>
+
+                      <ng-template pTemplate="emptymessage" let-columns>
+                        <tr>
+                          <td [attr.colspan]="3">
+                            No records found
+                          </td>
+                        </tr>
+                      </ng-template>
+                    </p-table>
+                  </ui-admin-table>
+                </div>
+
+              </app-card>
+
+
+            </p-tabPanel>
+
+          </p-tabView>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <hr>
+
+  <div class="row">
+
+    <div class="col-md-12 col-sm-12">
+      <app-card cardClass="card-datatable" [options]="false" [customHeader]="true">
+
+        <div class="row align-items-center mb-3">
+          <div class="col-2">
+
+          </div>
+          <div class="col-8">
+            <div class="text-center">
+              <h2 class="title-step">{{ stepMessage }}</h2>
+            </div>
+          </div>
+          <div class="col-2">
+
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12">
+            <ng-wizard [config]="config" (stepChanged)="stepChanged($event)">
+
+              <ng-wizard-step description="1">
+                <div class="row">
+                  <div class="col-md-12 col-sm-12">
+                    <div class="form-group">
+                      <ui-label [group]="formGroup" name="medicalReport" text="Informe médico:"
+                        message="Breve conversación con el paciente"></ui-label>
+                      <ui-editor-box [group]="formGroup" formControlName="medicalReport"></ui-editor-box>
+                      <ui-validators [group]="formGroup" name="medicalReport"></ui-validators>
+                    </div>
+                  </div>
+                </div>
+
+              </ng-wizard-step>
+
+              <ng-wizard-step description="2">
+
+                <div class="row mt-3">
+                  <div class="offset-md-9 col-md-3">
+                    <div class="text-right">
+                      <button type="button" class="btn btn-xs btn-success mr-2" (click)="loadPrescription()">
+                        <span>Carga receta médica</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+
+                <div class="row">
+                  <div class="col-12 pt-5">
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th>Receta</th>
+                          <th style="width: 20%">Indicaciones generales</th>
+                          <th style="width: 20%">Observaciones</th>
+                          <th style="width: 15%"></th>
+                        </tr>
+                      </thead>
+
+                      <tbody formArrayName="prescriptions">
+                        <tr *ngIf="formGroup.get('prescriptions')['controls'].length == 0">
+                          <td colspan="4" style="width: 100%;">
+                            <div class="text text-center">
+                              <span
+                                [ngClass]="{'invalid-feedback force-invalid-feedback': formGroup.get('prescriptions').invalid && (formGroup.touched && formGroup.get('prescriptions').dirty || formGroup.get('prescriptions').touched)}">
+                                Cargue la receta</span>
+                            </div>
+                          </td>
+                        </tr>
+
+                        <tr *ngFor="let item of formGroup.get('prescriptions')['controls']; let i = index;"
+                          [formGroupName]="i">
+
+                          <td>
+                            {{ item.value.title }}
+                          </td>
+                          <td>
+                            {{ item.value.indication }}
+                          </td>
+                          <td>
+                            {{ item.value.observation }}
+                          </td>
+                          <td>
+                            <button class="btn btn-primary btn-circle mr-2" type="button"
+                              (click)="loadEditPrescription(item.value, i)">
+                              <i class="fa fa-edit"></i>
+                            </button>
+
+                            <button class="btn btn-success btn-circle mr-2" type="button"
+                              (click)="printPrescription(item.value)">
+                              <i class="fa fa-print"></i>
+                            </button>
+
+                            <button class="btn btn-danger btn-circle" type="button"
+                              (click)="removePrescription($event, i)">
+                              <i class="fa fa-trash"></i>
+                            </button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </ng-wizard-step>
+
+
+              <ng-wizard-step description="3">
+
+                <div class="row mt-3">
+                  <div class="offset-md-9 col-md-3">
+                    <div class="text-right">
+                      <button type="button" class="btn btn-xs btn-success mr-2" (click)="loadDocuments()">
+                        <span>Cargar documento(s)</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+
+                <div class="row">
+                  <div class="col-12 pt-5">
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th>Título</th>
+                          <th style="width: 40%">Médico responsable</th>
+                          <th style="width: 15%"></th>
+                        </tr>
+                      </thead>
+
+                      <tbody formArrayName="documents">
+                        <tr *ngIf="formGroup.get('documents')['controls'].length == 0">
+                          <td colspan="4" style="width: 100%;">
+                            <div class="text text-center">
+                              <span
+                                [ngClass]="{'invalid-feedback force-invalid-feedback': formGroup.get('documents').invalid && (formGroup.touched && formGroup.get('documents').dirty || formGroup.get('documents').touched)}">
+                                Cargue documentos</span>
+                            </div>
+                          </td>
+                        </tr>
+
+                        <tr *ngFor="let item of formGroup.get('documents')['controls']; let i = index;"
+                          [formGroupName]="i">
+
+                          <td>
+                            {{ item.value.title }}
+                          </td>
+                          <td>
+                            {{ item.value.responsibleDoctor }}
+                          </td>
+                          <td>
+                            <button class="btn btn-primary btn-circle mr-2" type="button"
+                              (click)="loadEditDocument(item.value, i)">
+                              <i class="fa fa-edit"></i>
+                            </button>
+
+                            <button class="btn btn-danger btn-circle" type="button" (click)="removeDocument($event, i)">
+                              <i class="fa fa-trash"></i>
+                            </button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </ng-wizard-step>
+            </ng-wizard>
+          </div>
+        </div>
+
+        <div class="button-left pb-3 pr-4">
+
+          <button type="button" *ngIf="currentStep > 0" class="btn btn-primary float-left"
+            (click)="showPreviousStep($event)">
+            <i class="fa fa-angle-left"></i>
+            Regresar
+          </button>
+
+          <ng-container *ngIf="currentStep == 2 else behingprevoious">
+            <button type="button" class="btn btn-primary float-right" (click)="submit($event)">
+              Registrar procedimiento
+            </button>
+          </ng-container>
+
+          <ng-template #behingprevoious>
+            <button type="button" class="btn btn-primary float-right" (click)="showNextStep($event)">
+              Siguiente
+              <i class="fa fa-angle-right"></i>
+            </button>
+          </ng-template>
+
+        </div>
+
+      </app-card>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <pre>{{ formGroup.getRawValue() | json }}</pre>
+    </div>
+  </div>
+
+</div>

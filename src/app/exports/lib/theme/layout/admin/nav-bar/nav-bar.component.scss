@@ -1,0 +1,21 @@
+img.logo {
+  height: 52px !important;
+  // width: 90px !important;
+}
+
+.pcoded-navbar {
+  &.navbar-collapsed {
+    display: none !important;
+  }
+}
+
+.navbar .pcoded-header {
+
+  .m-header {
+    width: 100px;
+  }
+}
+
+.pcoded-navbar.navbar-collapsed ~ .pcoded-main-container {
+  margin-left: 0;
+}

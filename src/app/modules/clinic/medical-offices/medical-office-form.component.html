@@ -1,0 +1,57 @@
+<ui-modal-form title="Consultorio | Formulario" [buttonClose]="true" [buttonSubmit]="true" [formGroup]="formGroup"
+  (formSubmit)="submit($event)">
+
+  <input type="hidden" [formControlName]="modelIdPropertyName" />
+  <input type="hidden" formControlName="createdAt" />
+
+  <div class="row">
+    <div class="col-8">
+      <div class="form-group">
+        <ui-label [group]="formGroup" name="officeName" text="Consultorio" message="Nombre del consultorio"></ui-label>
+        <ui-text-box [group]="formGroup" formControlName="officeName"></ui-text-box>
+        <ui-validators [group]="formGroup" name="officeName"></ui-validators>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="form-group">
+        <ui-label [group]="formGroup" name="officeNumber" text="Nro. ambiente / Código"
+          message="Código de identificación del cosnultorio o área EJ: AB-00001">
+        </ui-label>
+        <ui-text-box [group]="formGroup" formControlName="officeNumber"></ui-text-box>
+        <ui-validators [group]="formGroup" name="officeNumber"></ui-validators>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <div class="form-group">
+        <ui-label [group]="formGroup" name="address" text="Dirección"
+          message="Lugar o localización del ambiente del consultorio EJ: Piso 1, pasillo 3."></ui-label>
+        <ui-text-area [group]="formGroup" formControlName="address" [rows]="5">
+        </ui-text-area>
+        <ui-validators [group]="formGroup" name="address"></ui-validators>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-6">
+      <div class="form-group">
+        <ui-label [group]="formGroup" name="phone" text="Teléfono" message="Télefono o linea de contacto"></ui-label>
+        <ui-text-box [group]="formGroup" formControlName="phone"></ui-text-box>
+        <ui-validators [group]="formGroup" name="phone"></ui-validators>
+      </div>
+    </div>
+
+    <div class="col-6">
+      <div class="form-group">
+        <div style="padding-top: 35px;">
+          <ui-check-box [group]="formGroup" formControlName="active" label="Activo"></ui-check-box>
+        </div>
+        <ui-validators [group]="formGroup" name="active"></ui-validators>
+      </div>
+    </div>
+  </div>
+
+</ui-modal-form>

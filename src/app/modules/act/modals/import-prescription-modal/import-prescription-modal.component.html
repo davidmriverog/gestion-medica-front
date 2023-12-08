@@ -1,0 +1,181 @@
+<div class="modal-header">
+  <span class="modal-title">
+    Receta médica | Formulario
+  </span>
+</div>
+
+<div class="modal-body" [formGroup]="formPrescription">
+
+  <input type="hidden" formControlName="code" />
+
+  <div class="row">
+    <div class="col-4">
+
+      <div class="box-attention-medical">
+
+        <div class="box-attention-header">
+
+          <span class="box-attention-title">
+            Receta
+          </span>
+
+        </div>
+
+        <div class="box-attention-body">
+
+          <div class="row">
+            <div class="col-md-12">
+              <ui-label [group]="formPrescription" name="title" text="Receta" message="Título de la receta"></ui-label>
+              <ui-text-box [group]="formPrescription" formControlName="title"></ui-text-box>
+              <ui-validators [group]="formPrescription" name="title"></ui-validators>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12">
+              <ui-label [group]="formPrescription" name="indication" text="Indicacion(es)"
+                message="Indicaciones generales"></ui-label>
+              <ui-text-area [group]="formPrescription" formControlName="indication" [rows]="6">
+              </ui-text-area>
+              <ui-validators [group]="formPrescription" name="indication"></ui-validators>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12">
+              <ui-label [group]="formPrescription" name="observation" text="Observación" message="Breve observación">
+              </ui-label>
+              <ui-text-area [group]="formPrescription" formControlName="observation" [rows]="6">
+              </ui-text-area>
+              <ui-validators [group]="formPrescription" name="observation"></ui-validators>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+    <div class="col-8">
+
+      <div class="row" [formGroup]="formMedicine">
+        <div class="col-12">
+
+          <div class="box-attention-medical">
+
+            <div class="box-attention-header">
+
+              <span class="box-attention-title">
+                Medicamento / Medicina
+              </span>
+
+              <div class="float-right">
+                <button type="button" class="btn btn-success" (click)="addMedicine()">
+                  Agregar medicamento
+                </button>
+              </div>
+
+            </div>
+
+            <div class="box-attention-body">
+
+              <div class="row">
+                <div class="col-md-12">
+                  <ui-label [group]="formMedicine" name="medicineId" text="Medicamento" message="Medicina"></ui-label>
+                  <ui-dropdown [group]="formMedicine" formControlName="medicineId" bindLabel="name"
+                    (change)="selectedMedicine($event)" bindValue="_id" [items]="(medicines$ | async)">
+                  </ui-dropdown>
+                  <ui-validators [group]="formMedicine" name="medicineId"></ui-validators>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-12">
+                  <ui-label [group]="formMedicine" name="indication" text="Indicacion(es)"
+                    message="Indicación del medicamento"></ui-label>
+                  <ui-text-area [group]="formMedicine" formControlName="indication" [rows]="2">
+                  </ui-text-area>
+                  <ui-validators [group]="formMedicine" name="indication"></ui-validators>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <ui-label [group]="formMedicine" name="posology" text="Modo administración"
+                    message="Modo de administración EJ: Oral, inyectable, entre otros.">
+                  </ui-label>
+                  <ui-text-box [group]="formMedicine" formControlName="posology"></ui-text-box>
+                  <ui-validators [group]="formMedicine" name="posology"></ui-validators>
+                </div>
+                <div class="col-md-6">
+                  <ui-label [group]="formMedicine" name="quantity" text="Cantidad(es)" message="Cantidades a recetar">
+                  </ui-label>
+                  <ui-number-box [group]="formMedicine" formControlName="quantity"></ui-number-box>
+                  <ui-validators [group]="formMedicine" name="quantity"></ui-validators>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+
+      <hr>
+
+      <div class="row">
+        <div class="col-12">
+          <table class="table table-row table-bordered">
+            <thead>
+              <tr>
+                <th>Medicamento</th>
+                <th>Modo administración</th>
+                <th>Indicación</th>
+                <th>Cantidad</th>
+                <th></th>
+              </tr>
+            </thead>
+
+            <tbody formArrayName="medicines">
+              <tr *ngIf="formPrescription.get('medicines')['controls'].length == 0">
+                <td colspan="5" style="width: 100%;">
+                  <div class="text text-center">
+                    <span
+                      [ngClass]="{'invalid-feedback force-invalid-feedback': formPrescription.get('medicines').invalid && (formPrescription.touched && formPrescription.get('medicines').dirty || formPrescription.get('medicines').touched)}">
+                      Por favor receta o cargue un medicamento</span>
+                  </div>
+                </td>
+              </tr>
+
+              <tr *ngFor="let item of formPrescription.get('medicines')['controls']; let i = index;"
+                [formGroupName]="i">
+                <td>{{ item.value.medicineName != null ? item.value.medicineName : item.value.medicine.name }}</td>
+                <td>{{ item.value.posology }}</td>
+                <td>{{ item.value.indication }}</td>
+                <td>{{ item.value.quantity }}</td>
+                <td>
+                  <button class="btn btn-danger btn-circle" type="button" (click)="removeMedicine(i)">
+                    <i class="fa fa-trash"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="modal-footer">
+  <div class="align-right">
+    <button class="btn btn-success mr-3" (click)="savePrescription()">
+      Agregar receta
+    </button>
+
+    <button class="btn btn-danger" (click)="activeModal.dismiss('Cross click')">
+      Salir
+    </button>
+  </div>
+</div>

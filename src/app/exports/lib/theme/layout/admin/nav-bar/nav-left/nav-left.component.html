@@ -1,0 +1,26 @@
+<ul class="navbar-nav mr-auto">
+  <ng-template [ngxPermissionsOnly]="['ADMINISTRATOR', 'ROOT_ADMINISTRATOR', 'RECEPTIONIST', 'MEDICAL']">
+
+    <li class="nav-item">
+
+      <ng-container *ngIf="(period$ | async) != null else withoutPeriod">
+        <span class="badge badge-success">
+          <i class="fas fa-book-medical"></i> {{ (period$ | async)?.name }}
+        </span> -
+        <span class="badge badge-warning">
+          <i class="fas fa-calendar"></i> Fecha Inicio: {{ (period$ | async)?.startDate | utcDate:"dd-MM-yyyy" }}
+        </span> -
+        <span class="badge badge-danger">
+          <i class="fas fa-calendar"></i> Fecha Cierre: {{ (period$ | async)?.endDate | utcDate: "dd-MM-yyyy" }}
+        </span>
+      </ng-container>
+
+      <ng-template #withoutPeriod>
+        <span class="badge badge-danger">
+          Sin periodo contable abierto
+        </span>
+      </ng-template>
+
+    </li>
+  </ng-template>
+</ul>

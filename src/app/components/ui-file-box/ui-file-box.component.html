@@ -1,0 +1,18 @@
+<ng-container *ngIf="value != null else chooseImage">
+  <div class="d-flex flex-column align-items-center">
+    <div class="box-avatar-img">
+      <div class="btn btn-inverse btn-icon btn-circle btn-xs button-remove-img float-right" (click)="removeFile()"><i
+          class="fa fa-times"></i></div>
+      <img [src]="value.objectURL" [ngStyle]="{ 'height.px': height, 'width.px': width }" class="mx-auto d-block" />
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #chooseImage>
+  <div class="dropzone-choose-image" [ngStyle]="{ 'height.px': height, 'width.px': width }">
+    <div class="text-center w-100" style="padding-top: 48px;">
+      <input type="file" style="display: none" name="image" (change)="fileProgress($event)" #hiddenfileinput />
+      <button class="btn btn-primary btn-sm" type="button" (click)="hiddenfileinput.click()">Cargar imagen</button>
+    </div>
+  </div>
+</ng-template>

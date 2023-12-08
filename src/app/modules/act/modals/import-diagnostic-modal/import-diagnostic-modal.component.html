@@ -1,0 +1,65 @@
+<div class="modal-header">
+    <span class="modal-title">
+        Diagnostico (CIE-10)
+    </span>
+</div>
+
+<div class="modal-body" [formGroup]="formDiagnostic">
+
+    <input type="hidden" formControlName="diagnosticName" />
+    <input type="hidden" formControlName="code" />
+
+    <div class="row">
+        <div class="col-md-9">
+            <ui-label [group]="formDiagnostic" name="diagnosticId" text="Diagnostico" message="Ingrese diagnostico"></ui-label>
+            <div class="form-group">
+                <ui-dropdown [group]="formDiagnostic" formControlName="diagnosticId" bindLabel="name"
+                    (change)="diagnosticSelect($event)"
+                    bindValue="_id" [items]="(diagnostics$ | async)">
+                </ui-dropdown>
+                <ui-validators [group]="formDiagnostic" name="diagnosticId"></ui-validators>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <ui-label [group]="formDiagnostic" name="code" text="Código" message="Código refrencia CIE-10"></ui-label>
+            <div class="form-group">
+                <ui-text-box [group]="formDiagnostic" formControlName="code"></ui-text-box>
+                <ui-validators [group]="formDiagnostic" name="code"></ui-validators>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <ui-label [group]="formDiagnostic" name="diagnosticType" text="Tipo" message="Tipo de diagnostico"></ui-label>
+            <ui-dropdown [group]="formDiagnostic" formControlName="diagnosticType" bindLabel="name"
+                bindValue="id" [items]="diagnosticTypes">
+            </ui-dropdown>
+            <ui-validators [group]="formDiagnostic" name="diagnosticType"></ui-validators>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <ui-label [group]="formDiagnostic" name="observation" text="Observación"></ui-label>
+            <ui-text-area [group]="formDiagnostic" formControlName="observation" [rows]="3"></ui-text-area>
+            <ui-validators [group]="formDiagnostic" name="observation"></ui-validators>
+        </div>
+    </div>
+
+</div>
+
+<div class="modal-footer">
+    <div class="align-right">
+        <button class="btn btn-success mr-3" [disabled]="formDiagnostic.invalid"
+            (click)="addDiagnostic()">
+            Agregar diagnostico
+        </button>
+
+        <button class="btn btn-danger" (click)="activeModal.dismiss('Cross click')">
+            Salir
+        </button>
+    </div>
+</div>

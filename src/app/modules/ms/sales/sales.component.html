@@ -1,0 +1,119 @@
+<div class="row">
+
+  <div class="col-12">
+
+    <app-card [hidHeader]="false" cardClass="card-datatable" customHeader="true">
+
+      <div class="app-card-header">
+        <h5>Listado de reservas</h5>
+        <div class="card-header-right">
+
+          <button type="button" class="btn btn-xs btn-warning ml-1" (click)="adminTable.refreshing()">
+            <span><i class="fa fa-redo"></i> Refrescar</span>
+          </button>
+
+          <button type="button" class="btn btn-xs btn-primary ml-1" (click)="adminTable.clearFilters()">
+            <span><i class="fa fa-eraser"></i> Limpiar</span>
+          </button>
+
+          <button type="button" class="btn btn-xs btn-danger ml-1" (click)="adminTable.openFilter()">
+            <span><i class="fa fa-filter"></i> Filtros</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="dt-responsive">
+        <ui-admin-table #adminTable (refresh)="onRefresh($event)" [apiRecords]="(records$ | async)" [pageSize]="15">
+          <ng-template #contentFiltered>
+            <div class="row">
+              <div class="col-12">
+                <ui-text-filter label="Nro. reserva" property="orderSales" mode="like">
+                </ui-text-filter>
+              </div>
+            </div>
+
+          </ng-template>
+
+          <p-table>
+            <ng-template pTemplate="header">
+              <tr>
+                <th scope="col">Orden de venta</th>
+                <th scope="col">Fecha de venta</th>
+                <th scope="col">Cond. pago</th>
+                <th scope="col">Origen</th>
+                <th scope="col">Cliente</th>
+                <th scope="col" style="width: 10%">Monto</th>
+                <th scope="col" style="width: 10%">Estado</th>
+                <th scope="col" style="width: 15%" class="text-center">
+                  Acciones
+                </th>
+              </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-row>
+              <tr [pContextMenuRow]="row" [pSelectableRow]="row">
+
+                <td>
+                    <span class="badge badge-primary">{{ row.orderSales }}</span>
+                </td>
+                <td>
+                    <b>{{ row.createdAt | date: "dd/MM/yyyy HH:mm" }}</b>
+                </td>
+                <td>
+                    <b>{{ row.paymentCondition?.name }}</b>
+                </td>
+                <td>
+                    <b>{{ row.platform?.name }}</b>
+                </td>
+                <td>
+                    <b>{{ row.patient?.firstName }} {{ row.patient?.firstSurname }}</b>
+                </td>
+                <td>
+                    <span class="badge badge-success" *ngIf="row.isAnulated == false">
+                        +{{ row.netAmount | number:"1.1-2" }}
+                    </span>
+
+                    <span class="badge badge-danger" *ngIf="row.isAnulated == true">
+                        -{{ row.netAmount | number:"1.1-2" }}
+                    </span>
+                </td>
+                <td>
+                    <ng-container *ngIf="row.isAnulated == false else anulated">
+                        <span class="badge" [ngClass]="{
+                            'badge-success': row.isPay == true,
+                            'badge-danger': row.isPay == false
+                        }">
+                            {{ row.isPay == true ? "Pagado" : "No pagado" }}
+                        </span>
+                    </ng-container>
+
+                    <ng-template #anulated>
+                        <span class="badge badge-danger">Venta Anulada</span>
+                    </ng-template>
+
+                </td>
+                <td class="text-center">
+                  <button type="button" class="btn btn-sm btn-icon btn-warning mr-2" (click)="goDetail(row._id)" ngbPopover="Ver detalle" triggers="mouseenter:mouseleave">
+                      <i class="fa fa-file-invoice"></i>
+                  </button>
+
+                  <button type="button" class="btn btn-sm btn-icon btn-success" placement="left" (click)="print(row)" ngbPopover="Imprimir ticket" triggers="mouseenter:mouseleave">
+                      <i class="fa fa-print"></i>
+                  </button>
+                </td>
+              </tr>
+            </ng-template>
+
+            <ng-template pTemplate="emptymessage" let-columns>
+              <tr>
+                <td [attr.colspan]="8">
+                  No records found
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </ui-admin-table>
+      </div>
+    </app-card>
+  </div>
+</div>

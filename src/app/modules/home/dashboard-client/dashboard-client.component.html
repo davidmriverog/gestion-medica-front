@@ -1,0 +1,175 @@
+<div class="row">
+  <div class="col-12">
+
+    <app-card cardClass="card-datatable" [options]="false" [customHeader]="true">
+
+      <div class="app-card-header">
+        <div class="card-header-right">
+          <button type="button" class="btn btn-xs btn-danger">
+            <span><i class="fa fa-reload"></i> Refrescar</span>
+          </button>
+        </div>
+      </div>
+
+
+      <div class="row">
+        <div class="col-md-6 col-sm-12">
+          <strong>Apellido(s) y nombre(s)</strong><br>
+          <span>
+            {{ ( patient$ | async)?.firstName }}
+            {{ (patient$ | async)?.firstSurname }}
+          </span>
+        </div>
+
+        <div class="col-md-2 col-sm-6">
+          <strong>Género</strong><br>
+          <span>
+            {{ (patient$ | async)?.gender == "M" ? "Masculino" : "Femenino" }}
+          </span>
+        </div>
+
+        <div class="col-md-2 col-sm-6">
+          <strong>Nro. historia</strong><br>
+          <span class="badge badge-success">
+            {{ (patient$ | async)?.historyNumber }}
+          </span>
+        </div>
+
+        <div class="col-md-2 col-sm-6">
+          <strong>Edad</strong><br>
+          <span>
+            {{ showAge((patient$ | async)?.birthDate) }}
+          </span>
+        </div>
+
+      </div>
+
+      <div class="row mt-1">
+        <div class="col-md-6 col-sm-12">
+          <strong>Dirección</strong><br>
+          <span>
+            {{ ( patient$ | async)?.addresses }}
+          </span>
+        </div>
+
+        <div class="col-md-2 col-sm-6">
+          <strong>Nro. Télf:</strong><br>
+          <span>
+            {{ (patient$ | async)?.cellphone }}
+          </span>
+        </div>
+
+        <div class="col-md-2 col-sm-6">
+          <strong>Correo electrónico</strong><br>
+          <span class="badge badge-info">
+            {{ (patient$ | async)?.emailAddress }}
+          </span>
+        </div>
+
+      </div>
+
+    </app-card>
+
+  </div>
+</div>
+
+
+<app-card cardTitle="Cuenta corriente del periodo" cardClass="card-datatable" [options]="false" [customHeader]="true">
+  <div class="app-card-header">
+    <h5>Historial de atenciones</h5>
+
+    <div class="card-header-right">
+      <button type="button" class="btn btn-xs btn-warning ml-1" (click)="adminTable.refreshing();">
+        <span><i class="fa fa-redo"></i> Refrescar</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="dt-responsive">
+    <ui-admin-table #adminTable (refresh)="onRefresh($event)" [apiRecords]="(records$ | async)" [pageSize]="15">
+      <ng-template #contentFiltered>
+
+      </ng-template>
+
+      <p-table>
+        <ng-template pTemplate="header">
+          <tr>
+            <th scope="col">Cupo</th>
+            <th scope="col">Fecha atención</th>
+            <th scope="col">Orden de venta</th>
+            <th scope="col">Fecha de venta</th>
+            <th scope="col">Médico</th>
+            <th scope="col">hora consulta</th>
+            <th scope="col" style="width: 15%">Producto</th>
+            <th scope="col" style="width: 10%">Estado</th>
+            <th scope="col" style="width: 10%">Accion</th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-row>
+          <tr [pContextMenuRow]="row" [pSelectableRow]="row">
+
+            <td>
+              <span class="badge badge-primary">
+                {{ row.planningMedicalCouponTurn?.title }}
+              </span>
+            </td>
+            <td>
+              <strong>{{ row.planningMedicalCouponTurn?.planningMedicalTurn?.attentionDate | date:"dd-MM-yyyy"
+                }}</strong>
+            </td>
+            <td>
+              <span class="badge badge-info">
+                {{ row.planningMedicalCouponTurn?.saleDetail?.sale?.orderSales ?
+                row.planningMedicalCouponTurn?.saleDetail?.sale?.orderSales : "-" }}
+              </span>
+            </td>
+            <td>
+              <strong>
+                {{ row.planningMedicalCouponTurn?.saleDetail?.sale?.createdAt ?
+                (row.planningMedicalCouponTurn?.saleDetail?.sale?.createdAt | date: "dd-MM-yyyy HH:mm") :
+                "-" }}
+              </strong>
+            </td>
+            <td>
+              {{ row.planningMedicalCouponTurn?.planningMedicalTurn?.doctor?.firstName }}
+              {{ row.planningMedicalCouponTurn?.planningMedicalTurn?.doctor?.firstSurname }}
+            </td>
+            <td>
+              <span class="badge badge-success">
+                <i class="fa fa-clock"></i> {{ row.planningMedicalCouponTurn?.start }}
+              </span>
+            </td>
+            <td>
+              {{ row.planningMedicalCouponTurn?.saleDetail?.product?.name }}
+            </td>
+            <td>
+              <span class="badge badge-primary"
+                [ngStyle]="{background: row.planningMedicalCouponTurn?.planningTurnStatus?.color}">
+                <i class="fa {{ row.planningMedicalCouponTurn?.planningTurnStatus?.icon }}"></i> {{
+                row.planningMedicalCouponTurn?.planningTurnStatus?.name }}
+              </span>
+            </td>
+            <td>
+              <button type="button" class="btn btn-sm btn-icon btn-success" ngbPopover="Ver atención" placement="left"
+                (click)="goAttentionFormDetail(row)"
+                triggers="mouseenter:mouseleave">
+                <i class="fa fa-hospital"></i>
+              </button>
+            </td>
+
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage" let-columns>
+          <tr>
+            <td [attr.colspan]="9">
+              No records found
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </ui-admin-table>
+  </div>
+
+</app-card>

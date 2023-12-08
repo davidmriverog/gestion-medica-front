@@ -1,0 +1,19 @@
+<ui-modal-form title="Importar Especialidades | Carga masiva" [buttonClose]="true" [buttonSubmit]="true"
+  [formGroup]="formGroup" (formSubmit)="submit($event)">
+
+  <input type="hidden" [formControlName]="modelIdPropertyName" />
+  <input type="hidden" formControlName="createdAt" />
+
+  <div class="row">
+    <div class="col-12">
+      <div class="form-group">
+        <ui-label [group]="formGroup" name="file" text="Adjunto a importar:"
+          message="Documento a importar a la carga de afecciones médicas por favor asegurese que sea un .xlsx">
+        </ui-label> <br>
+        <ui-file-upload [group]="formGroup" formControlName="file" [multiple]="false" fileType=".xls,.xlsx">
+        </ui-file-upload>
+      </div>
+    </div>
+  </div>
+
+</ui-modal-form>

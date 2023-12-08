@@ -1,0 +1,17 @@
+<form [formGroup]="formGroup" (ngSubmit)="onSubmit($event)">
+    <div class="modal-header">
+        <h5 class="modal-title">{{ title }}</h5>
+    </div>
+    <div class="modal-body">
+        <ng-content></ng-content>
+    </div>
+    <div class="modal-footer" *ngIf="buttonClose || buttonSubmit" style="height: 60px;">
+        <button class="btn btn-default" type="button" (click)="activeModal.close()" *ngIf="buttonClose">
+            Cerrar
+        </button>
+
+        <button class="btn btn-success" type="submit" *ngIf="buttonSubmit">
+            Guardar
+        </button>
+    </div>
+</form>

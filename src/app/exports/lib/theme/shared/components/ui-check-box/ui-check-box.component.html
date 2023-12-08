@@ -1,0 +1,4 @@
+<div [ngClass]="{ 'form-check': true, 'disabled': disabled, 'checkbox-inline': inline }">
+    <input type="checkbox" class="form-check-input" id="{{ identifier }}" [checked]="checked" [disabled]="disabled" (change)="onChange($event.target.value)" />
+    <label for="{{ identifier }}" class="form-check-label">{{ label }}</label>
+</div>

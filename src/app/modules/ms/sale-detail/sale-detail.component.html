@@ -1,0 +1,154 @@
+<div class="row">
+    <div class="col-md-12 col-sm-12">
+        <app-card cardClass="card-datatable" [options]="false" [customHeader]="true">
+
+            <div class="app-card-header">
+                <h5>Datos de la venta </h5>
+                <div class="card-header-right">
+
+                    <ng-template [ngxPermissionsOnly]="['ADMINISTRATOR', 'ROOT_ADMINISTRATOR', 'RECEPTIONIST']">
+
+                        <button type="button" class="btn btn-xs btn-danger mr-2" (click)="deleteSales()">
+                            <i class="fa fa-exclamation"></i> Anular venta
+                        </button>
+                    </ng-template>
+
+                    <button type="button" class="btn btn-icon btn-success mr-2" (click)="print()">
+                        <i class="fa fa-print"></i> Imprimir
+                    </button>
+
+                    <button type="button" class="btn btn-xs btn-info" (click)="redirectToHistories()">
+                        <span>Regresar</span>
+                    </button>
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 col-sm-12">
+                    <div class="row">
+                        <div class="col-md-4 col-sm-12"> <span class="float-right">Fecha de venta:</span></div>
+                        <div class="col-md-8 col-sm-12">
+                            <b>{{ (saleInfo$ | async)?.createdAt | date:"dd/MM/yyyy HH:mm" }}</b>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4 col-sm-12"> <span class="float-right">Orden venta:</span></div>
+                        <div class="col-md-8 col-sm-12">
+                            <span class="badge badge-success">
+                                {{ (saleInfo$ | async)?.orderSales }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4 col-sm-12"> <span class="float-right">Cliente:</span></div>
+                        <div class="col-md-8 col-sm-12">
+                            <b>{{ (saleInfo$ | async)?.patient?.firstName }} {{ (saleInfo$ |
+                                async)?.patient?.firstSurname }} </b>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4 col-sm-12"> <span class="float-right">Nro. Historia:</span></div>
+                        <div class="col-md-8 col-sm-12">
+                            <b>{{ (saleInfo$ | async)?.patient?.historyNumber }}</b>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col-md-6 col-sm-12">
+
+                    <div class="row">
+                        <div class="col-md-4 col-sm-12"> <span class="float-right">Plataforma:</span></div>
+                        <div class="col-md-8 col-sm-12">
+                            <b>{{ (saleInfo$ | async)?.platform?.name }}</b>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4 col-sm-12"> <span class="float-right">Condición de pago:</span></div>
+                        <div class="col-md-8 col-sm-12">
+                            <b>{{ (saleInfo$ | async)?.paymentCondition?.name }}</b>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4 col-sm-12"> <span class="float-right">Monto total:</span></div>
+                        <div class="col-md-8 col-sm-12">
+                            <span class="badge badge-info">{{ (currency$ | async)?.symbol }} {{ (saleInfo$ |
+                                async)?.netAmount | number:"1.1-2" }}</span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4 col-sm-12"> <span class="float-right">Estado:</span></div>
+                        <div class="col-md-8 col-sm-12">
+                            <span class="badge badge-success">{{ (saleInfo$ | async)?.isPay ? "Pagado" : "No pagado"
+                                }}</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </app-card>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12 col-sm-12">
+        <app-card cardClass="card-datatable" [options]="false" [customHeader]="true">
+
+            <div class="app-card-header">
+                <h5>Lista de detalle</h5>
+            </div>
+
+            <div class="dt-responsive table-responsive">
+                <table class="table table-striped row-border table-hover">
+                    <thead>
+                        <tr>
+                            <th>Especialidad</th>
+                            <th>Producto</th>
+                            <th>Fecha de At.</th>
+                            <th>Cupo</th>
+                            <th>Medico / Profesional</th>
+                            <th>Costo</th>
+                            <th>Estado atención</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr *ngFor="let item of (saleInfo$ | async)?.details">
+                            <td>
+                                <span class="badge badge-success"
+                                    [ngStyle]="{background: item.coupon.planningMedicalTurn.speciality.name.color }">
+                                    {{ item?.coupon?.planningMedicalTurn?.speciality?.name }}
+                                </span>
+                            </td>
+                            <td>{{ item?.product?.name }}</td>
+                            <td>{{ item?.coupon?.planningMedicalTurn?.attentionDate | date:"dd/MM/yyyy" }}</td>
+                            <td>{{ item?.coupon?.title }} <span class="badge badge-success"> {{
+                                    item?.coupon?.planningMedicalTurn?.medicalOffice?.officeName }}</span></td>
+                            <td>{{ item?.coupon?.planningMedicalTurn?.doctor?.firstName }} {{
+                                item?.coupon?.planningMedicalTurn?.doctor?.firstSurname }}</td>
+                            <td>{{ (currency$ | async)?.symbol }} {{ item.amount | number:"1.1-2" }}</td>
+                            <td>{{ item?.coupon?.planningTurnStatus?.name }}</td>
+                            <td>
+                                <button type="button" class="btn btn-icon btn-warning"
+                                    *ngIf="item.coupon.planningTurnStatusId == planningTurnStatusEnum.PendingAttention"
+                                    (click)="modalReprogramming(item)">
+                                    <i class="fa fa-clock"></i> Reprogramar
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </app-card>
+    </div>
+</div>

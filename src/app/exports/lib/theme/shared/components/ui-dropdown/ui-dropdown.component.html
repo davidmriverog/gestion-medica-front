@@ -1,0 +1,6 @@
+<div>
+    <ng-select class="form-control-select2" [items]="items" [(ngModel)]="selectedValue" [bindValue]="bindValue" [bindLabel]="bindLabel" [disabled]="disabled"
+               [ngClass]="{ 'input-validation-error is-invalid': formGroup && control && control.errors && (formGroup.touched || control.dirty || control.touched) }"
+               (change)="onChange($event)" [virtualScroll]="virtualScroll" [multiple]="multiple" [placeholder]="placeholder">
+    </ng-select>
+</div>

@@ -1,0 +1,10 @@
+<div class="invalid-feedback force-invalid-feedback" *ngIf="control.errors && control.dirty">
+    <span class="field-validation-error" *ngIf="control.hasError('required')">* Campo Requerido</span>
+    <span class="field-validation-error" *ngIf="control.hasError('maxlength')">* Tamano maximo excedido</span>
+    <span class="field-validation-error" *ngIf="control.hasError('pattern')">* Formato inválido</span>
+    <span class="field-validation-error" *ngIf="control.hasError('number')">* Número inválido</span>
+    <span class="field-validation-error" *ngIf="control.hasError('min')">* Número fuera de rango</span>
+    <span class="field-validation-error" *ngIf="control.hasError('max')">* Número fuera de rango</span>
+    <span class="field-validation-error" *ngIf="control.hasError('email')">* Debe ser un correo válido</span>
+    <ng-content></ng-content>
+</div>

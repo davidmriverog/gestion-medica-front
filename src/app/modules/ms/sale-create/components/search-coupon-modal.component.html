@@ -1,0 +1,177 @@
+<div class="modal-body" [formGroup]="formSearchGroup">
+
+  <div class="row">
+    <input type="hidden" formControlName="productCategoryId" />
+    <input type="hidden" formControlName="productCategoryName" />
+
+    <div class="col-12">
+      <app-card cardClass="card-datatable" [options]="false" [customHeader]="true">
+
+        <div class="app-card-header">
+          <div class="card-header-right">
+
+          </div>
+        </div>
+
+        <div class="row">
+
+          <div class="col-12">
+            <ui-label [group]="formSearchGroup" name="patientReservationId" text="Paciente a reservar"
+              message="Paciente a vender y/o reservar"></ui-label>
+
+            <div class="form-group">
+              <ui-patient-box [group]="formSearchGroup" formControlName="patientReservationId"
+                (changed)="patientSelect($event)"></ui-patient-box>
+              <ui-validators [group]="formSearchGroup" name="patientReservationId"></ui-validators>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-3 col-sm-12">
+            <ui-label [group]="formSearchGroup" name="specialityId" text="Especialidad"
+              message="Especialidad del cupo a reservar"></ui-label>
+            <ui-dropdown [group]="formSearchGroup" formControlName="specialityId" bindLabel="name" bindValue="_id"
+              [items]="(specialities$ | async)">
+            </ui-dropdown>
+            <ui-validators [group]="formSearchGroup" name="specialityId"></ui-validators>
+          </div>
+          <div class="col-md-3 col-sm-12">
+            <ui-label [group]="formSearchGroup" name="productId" text="Producto"
+              message="Producto a reservar, consultas, procedimientos y otros.."></ui-label>
+            <ui-dropdown [group]="formSearchGroup" formControlName="productId" bindLabel="name"
+              (change)="productSelected($event)" bindValue="_id" [items]="(products$ | async)">
+            </ui-dropdown>
+            <ui-validators [group]="formSearchGroup" name="productId"></ui-validators>
+          </div>
+          <div class="col-md-3 col-sm-12">
+            <div class="form-group">
+              <ui-label [group]="formSearchGroup" name="productCategoryName" text="Tipo de producto"
+                message="Tipo de producto a reservar">
+              </ui-label>
+              <ui-text-box [group]="formSearchGroup" formControlName="productCategoryName"></ui-text-box>
+              <ui-validators [group]="formSearchGroup" name="productCategoryName"></ui-validators>
+            </div>
+          </div>
+          <div class="col-md-3 col-sm-12">
+            <div class="form-group">
+              <ui-label [group]="formSearchGroup" name="price" [text]="(customTitle$ | async)"
+                message="Moneda de costo del servicio y/o producto"></ui-label>
+              <ui-currency-box [group]="formSearchGroup" formControlName="price"></ui-currency-box>
+              <ui-validators [group]="formSearchGroup" name="price"></ui-validators>
+            </div>
+          </div>
+        </div>
+
+      </app-card>
+    </div>
+  </div>
+
+  <hr />
+
+  <div class="row">
+    <div class="col-12">
+      <app-card cardClass="card-datatable" [options]="false" [customHeader]="true">
+
+        <div class="app-card-header">
+          <div class="card-header-right">
+            <button type="button" class="btn btn-xs btn-success ml-1" (click)="search()" placement="top"
+              ngbTooltip="Acción que busca todos los cupos disponibles a través del criterio de selección">
+              <span><i class="fa fa-search"></i> Buscar cupos</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-4 col-sm-12">
+            <div class="form-group">
+              <ui-label [group]="formSearchGroup" name="dateRanger" text="Rango de fechas"
+                message="Rango de fecha a elegir para buscar el cupo disponible según su elección"></ui-label>
+              <ui-form-date-ranger [group]="formSearchGroup" formControlName="dateRanger"
+                placeholder="Ingrese rango de fechas ..." [minDate]="minDate"></ui-form-date-ranger>
+            </div>
+          </div>
+          <div class="col-md-8 col-sm-12">
+            <div class="form-group">
+              <ui-label [group]="formSearchGroup" name="doctors" text="Doctores"
+                message="Filtrado de médicos según el rango."></ui-label>
+              <ui-dropdown [group]="formSearchGroup" formControlName="doctors" [multiple]="true" bindLabel="fullName"
+                bindValue="_id" [items]="(doctors$ | async)">
+              </ui-dropdown>
+              <ui-validators [group]="formSearchGroup" name="doctors"></ui-validators>
+            </div>
+          </div>
+        </div>
+
+        <hr />
+
+        <div class="row">
+          <div class="col-12">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th style="width: 15%;">Especialidad</th>
+                  <th style="width: 25%;">Consultorio</th>
+                  <th style="width: 10%;">Fecha de At.</th>
+                  <th style="width: 20%;">Medico / Profesional</th>
+                  <th style="width: 30%;">Cupo</th>
+                </tr>
+              </thead>
+
+              <tbody formArrayName="results">
+
+                <tr *ngIf="isSearching">
+                  <td colspan="5" style="width: 100%;">
+                    <div class="alert alert-warning">Buscando..</div>
+                  </td>
+                </tr>
+
+
+                <tr *ngIf="formSearchGroup.get('results')['controls'].length == 0 && !isSearching">
+                  <td colspan="5" style="width: 100%;">
+                    <div class="alert alert-warning">
+                      Sin registros, encontrados.</div>
+                  </td>
+                </tr>
+
+                <ng-container *ngFor="let item of formSearchGroup.get('results')['controls']; let i = index;"
+                  [formGroupName]="i">
+                  <tr>
+                    <td>{{ item.value.specialityName }} - <span class="badge badge-success">{{
+                        item.value.productCategoryName }}</span></td>
+                    <td>{{ item.value.medicalOfficeName }}</td>
+                    <td>{{ item.value.attentionDate | utcDate: "dd-MM-yyyy" }}</td>
+                    <td>{{ item.value.doctorFullName }}</td>
+                    <td>
+                      <ui-dropdown [group]="item" formControlName="planningMedicalCouponTurnId" bindLabel="title"
+                        (change)="selectedCoupon($event, item, i)" bindValue="_id" [items]="item.value.coupons">
+                      </ui-dropdown>
+                      <ui-validators [group]="item" name="planningMedicalCouponTurnId"></ui-validators>
+                    </td>
+                  </tr>
+
+                </ng-container>
+
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </app-card>
+    </div>
+  </div>
+
+</div>
+
+<div class="modal-footer">
+  <div class="align-right">
+    <button class="btn btn-success mr-3" (click)="import()" placement="top"
+      ngbTooltip="Cargamos los cupo(s) seleccionados al detalle de la venta">
+      Cargar cupo(s) seleccionado(s)
+    </button>
+
+    <button class="btn btn-danger" (click)="activeModal.dismiss('Cross click')">
+      Salir
+    </button>
+  </div>
+</div>

@@ -1,0 +1,24 @@
+.ui-table .ui-table-wrapper table thead.ui-table-thead tr > th {
+    font-size: 12px !important;
+}
+
+.ui-table .ui-table-wrapper table tbody.ui-table-tbody tr > td {
+    font-size: 12px !important;
+}
+
+.available-turn {
+    background: linear-gradient(45deg, #FFB64D, #FFB64D) !important;
+}
+
+.pending-attention-turn {
+    background: linear-gradient(45deg, #2ed8b6, #2ed8b6) !important;
+}
+
+.attended-attention-turn {
+    background: linear-gradient(45deg, #9e9c9e, #9e9c9e) !important;
+}
+
+.anulated-attention-turn {
+    background: linear-gradient(45deg, #FF5370, #FF5370) !important;
+}
+

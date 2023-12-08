@@ -1,0 +1,47 @@
+<ui-modal-form title="Moneda | Formulario" [buttonClose]="true" [buttonSubmit]="true" [formGroup]="formGroup"
+  (formSubmit)="submit($event)">
+
+  <input type="hidden" [formControlName]="modelIdPropertyName" />
+  <input type="hidden" formControlName="createdAt" />
+
+
+  <div class="row">
+    <div class="col-12">
+      <div class="form-group">
+        <ui-label [group]="formGroup" name="name" text="Moneda" message="Nombre de la moneda"></ui-label>
+        <ui-text-box [group]="formGroup" formControlName="name"></ui-text-box>
+        <ui-validators [group]="formGroup" name="name"></ui-validators>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <div class="form-group">
+        <ui-label [group]="formGroup" name="symbol" text="Símbolo" message="Símbolo de la moneda"></ui-label>
+        <ui-text-box [group]="formGroup" formControlName="symbol"></ui-text-box>
+        <ui-validators [group]="formGroup" name="symbol"></ui-validators>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <div class="form-group">
+        <ui-label [group]="formGroup" name="code" text="Código" message="Código de representación"></ui-label>
+        <ui-text-box [group]="formGroup" formControlName="code"></ui-text-box>
+        <ui-validators [group]="formGroup" name="code"></ui-validators>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <div class="form-group">
+        <ui-check-box [group]="formGroup" formControlName="active" label="Activo"></ui-check-box>
+        <ui-validators [group]="formGroup" name="active"></ui-validators>
+      </div>
+    </div>
+  </div>
+
+</ui-modal-form>

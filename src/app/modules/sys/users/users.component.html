@@ -1,0 +1,131 @@
+<div class="row">
+
+  <div class="col-12">
+
+    <div class="row justify-content-end mb-4">
+      <div class="col">
+        <button type="button" class="btn btn-xs btn-success ml-1 float-right" (click)="newUser()">
+          Nuevo usuario
+        </button>
+      </div>
+    </div>
+
+    <app-card [hidHeader]="false" cardClass="card-datatable" customHeader="true">
+
+      <div class="app-card-header">
+        <h5>Listado de usuario</h5>
+        <div class="card-header-right">
+
+          <button type="button" class="btn btn-xs btn-warning ml-1" (click)="adminTable.refreshing()">
+            <span><i class="fa fa-redo"></i> Refrescar</span>
+          </button>
+
+          <button type="button" class="btn btn-xs btn-primary ml-1" (click)="adminTable.clearFilters()">
+            <span><i class="fa fa-eraser"></i> Limpiar</span>
+          </button>
+
+          <button type="button" class="btn btn-xs btn-danger ml-1" (click)="adminTable.openFilter()">
+            <span><i class="fa fa-filter"></i> Filtros</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="dt-responsive">
+
+        <ui-admin-table #adminTable (refresh)="onRefresh($event)" [apiRecords]="(records$ | async)" [pageSize]="15">
+          <ng-template #contentFiltered>
+            <div class="row">
+              <div class="col-12">
+                <ui-text-filter label="Usuario" property="username" mode="like">
+                </ui-text-filter>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-12">
+                <ui-text-filter label="Email" property="email" mode="like">
+                </ui-text-filter>
+              </div>
+            </div>
+          </ng-template>
+
+          <p-table>
+            <ng-template pTemplate="header">
+              <tr>
+
+                <th width="10%">Usuario</th>
+                <th>Correo</th>
+                <th>Datos del perfil</th>
+                <th width="15%">Rol</th>
+                <th width="10%" class="text-center">Estado</th>
+                <th width="15%" class="text-center">Acciones</th>
+              </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-row>
+              <tr [pContextMenuRow]="row" [pSelectableRow]="row">
+                <td>
+                  <span class="badge badge-success">{{ row.username }}</span>
+                </td>
+                <td>{{ row.email ? row.email : "-" }}</td>
+                <td>
+                  <ng-container
+                    *ngIf="row.role.code == roleEnum.Admin || row.role.code == roleEnum.RootAdmin || row.role.code == roleEnum.Receptionist">
+                    {{ row.userConnection.staff.firstName }}
+                    {{ row.userConnection.staff.lastName }}
+                  </ng-container>
+
+                  <ng-container *ngIf="row.role.code == roleEnum.Medical">
+                    {{ row.userConnection.doctor.firstName }}
+                    {{ row.userConnection.doctor.firstSurname }}
+                  </ng-container>
+
+                  <ng-container *ngIf="row.role.code == roleEnum.Patient">
+                    {{ row.userConnection.patient.firstName }}
+                    {{ row.userConnection.patient.firstSurname }}
+                  </ng-container>
+                </td>
+                <td>
+                  <span class="badge badge-primary">{{ row.role.name }}</span>
+                </td>
+                <td class="text-center">
+                  <span class="badge" [ngClass]="{
+                    'badge-success': row.active,
+                    'badge-danger': !row.active
+                }">{{ row.active ? 'Activo' : 'Bloqueado' }}</span>
+                </td>
+                <td class="text-center">
+                  <ng-container *ngIf="row.active else ulockUser">
+                    <button type="button" class="btn btn-sm btn-icon btn-danger mr-2" (click)="lockedUser(row._id, false, row)">
+                      <i class="feather icon-lock"></i>
+                    </button>
+                  </ng-container>
+
+                  <ng-template #ulockUser>
+                    <button type="button" class="btn btn-sm btn-icon btn-success mr-2" (click)="lockedUser(row._id, true, row)"><i
+                        class="feather icon-unlock"></i></button>
+                  </ng-template>
+
+                  <button type="button" class="btn btn-sm btn-icon btn-warning mr-2" (click)="editUser(row)"><i
+                      class="feather icon-check-circle"></i></button>
+
+                </td>
+              </tr>
+            </ng-template>
+
+            <ng-template pTemplate="emptymessage" let-columns>
+              <tr>
+                <td [attr.colspan]="6">
+                  No records found
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+
+
+        </ui-admin-table>
+
+      </div>
+    </app-card>
+  </div>
+</div>

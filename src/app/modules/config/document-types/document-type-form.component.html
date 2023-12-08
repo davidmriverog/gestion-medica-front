@@ -1,0 +1,35 @@
+<ui-modal-form title="Tipo de documento" [buttonClose]="true" [buttonSubmit]="true" [formGroup]="formGroup"
+  (formSubmit)="submit($event)">
+
+  <input type="hidden" [formControlName]="modelIdPropertyName" />
+  <input type="hidden" formControlName="createdAt" />
+
+  <div class="row">
+    <div class="col-12">
+      <div class="form-group">
+        <ui-label [group]="formGroup" name="name" text="Tipo de documento" message="Tipo de documento"></ui-label>
+        <ui-text-box [group]="formGroup" formControlName="name"></ui-text-box>
+        <ui-validators [group]="formGroup" name="name"></ui-validators>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-6">
+      <div class="form-group">
+        <ui-label [group]="formGroup" name="code" text="Código" message="Código único de representación"></ui-label>
+        <ui-text-box [group]="formGroup" formControlName="code"></ui-text-box>
+        <ui-validators [group]="formGroup" name="code"></ui-validators>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="form-group">
+        <ui-label [group]="formGroup" name="mask" text="Máscara"
+          message="Expresión regular según el tipo de documento por EJ: 00.000.000"></ui-label>
+        <ui-text-box [group]="formGroup" formControlName="mask"></ui-text-box>
+        <ui-validators [group]="formGroup" name="mask"></ui-validators>
+      </div>
+    </div>
+  </div>
+
+</ui-modal-form>

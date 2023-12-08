@@ -1,0 +1,11 @@
+<div [ngClass]="{ 'custom-control custom-radio': true, disabled: disabled, 'custom-control-inline': inline }">
+    <input class="custom-control-input"
+        type="radio" id="{{ identifier }}"
+        name="{{ formControlName }}" [value]="value"
+        [checked]="checked" [disabled]="disabled"
+        [ngClass]="{
+            'is-invalid': control.errors && control.dirty
+        }"
+        (change)="onChange($event.target.value)" />
+    <label class="custom-control-label" for="{{ identifier }}">{{ label }}</label>
+</div>

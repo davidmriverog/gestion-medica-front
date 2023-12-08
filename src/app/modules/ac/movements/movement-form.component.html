@@ -1,0 +1,59 @@
+<ui-modal-form title="Movimiento | Formulario" [buttonClose]="true" [buttonSubmit]="true" [formGroup]="formGroup"
+  (formSubmit)="submit($event)">
+
+  <input type="hidden" [formControlName]="modelIdPropertyName" />
+  <input type="hidden" formControlName="createdAt" />
+  <input type="hidden" formControlName="movementCode" />
+
+  <div class="row">
+    <div class="col-6">
+      <div class="form-group">
+        <ui-label [group]="formGroup" name="transactionOperationCode" text="Nro. operación Ref."
+          message="Nro. de operación o referencia del movimiento"></ui-label>
+        <ui-text-box [group]="formGroup" formControlName="transactionOperationCode"></ui-text-box>
+        <ui-validators [group]="formGroup" name="transactionOperationCode"></ui-validators>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="form-group">
+        <ui-label [group]="formGroup" name="transactionOperationRefId" text="Código Ref (opcional)."
+          message="Código de transacción vinculada"></ui-label>
+        <ui-text-box [group]="formGroup" formControlName="transactionOperationRefId"></ui-text-box>
+        <ui-validators [group]="formGroup" name="transactionOperationRefId"></ui-validators>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <div class="form-group">
+        <ui-label [group]="formGroup" name="concept" text="Concepto" message="Breve descripción del movimiento">
+        </ui-label>
+        <ui-text-area [group]="formGroup" formControlName="concept" [rows]="3"></ui-text-area>
+        <ui-validators [group]="formGroup" name="concept"></ui-validators>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-6">
+      <ui-label [group]="formGroup" name="type" text="Tipo de movimiento"
+        message="Tipo de movimiento, entrada o salida de dinero"></ui-label>
+      <div class="form-group">
+        <ui-dropdown [group]="formGroup" formControlName="type" bindLabel="name" bindValue="code"
+          [items]="operationTypes">
+        </ui-dropdown>
+        <ui-validators [group]="formGroup" name="type"></ui-validators>
+      </div>
+    </div>
+    <div class="col-6">
+      <ui-label [group]="formGroup" name="amount" text="Monto"
+        message="Monto valor representado en la moneda configurada por el cliente."></ui-label>
+      <div class="form-group">
+        <ui-currency-box [group]="formGroup" formControlName="amount" decimal="2"></ui-currency-box>
+        <ui-validators [group]="formGroup" name="amount"></ui-validators>
+      </div>
+    </div>
+  </div>
+
+</ui-modal-form>

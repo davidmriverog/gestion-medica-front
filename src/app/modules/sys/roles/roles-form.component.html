@@ -1,0 +1,34 @@
+<ui-modal-form title="Formulario de Rol" [buttonClose]="true" [buttonSubmit]="true" [formGroup]="formGroup"
+  (formSubmit)="submit($event)" #modalForm>
+
+  <input type="hidden" [formControlName]="modelIdPropertyName" />
+  <input type="hidden" formControlName="createdAt" />
+  <input type="hidden" formControlName="permissions" />
+
+  <div class="row">
+
+    <div class="col-12">
+      <div class="form-group">
+        <ui-label [group]="formGroup" name="code" text="Código"></ui-label>
+        <ui-text-box [group]="formGroup" formControlName="code"></ui-text-box>
+        <ui-validators [group]="formGroup" name="code"></ui-validators>
+      </div>
+    </div>
+
+    <div class="col-12">
+      <div class="form-group">
+        <ui-label [group]="formGroup" name="name" text="Nombre del Rol"></ui-label>
+        <ui-text-box [group]="formGroup" formControlName="name"></ui-text-box>
+        <ui-validators [group]="formGroup" name="name"></ui-validators>
+      </div>
+    </div>
+
+    <div class="col-12">
+      <div class="form-group">
+        <ui-label [group]="formGroup" name="description" text="Descripción"></ui-label>
+        <ui-text-area [group]="formGroup" formControlName="description" [rows]="3"></ui-text-area>
+      </div>
+    </div>
+
+  </div>
+</ui-modal-form>

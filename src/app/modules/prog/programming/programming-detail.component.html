@@ -1,0 +1,179 @@
+<div class="row">
+    <div class="col-md-12 col-sm-12">
+        <app-card cardClass="card-datatable" [options]="false" [customHeader]="true">
+
+            <div class="app-card-header">
+                <h5>Detalle de programación</h5>
+                <div class="card-header-right">
+                    <button type="button" class="btn btn-xs btn-danger mr-2" (click)="deleteProgramming()">
+                        <span>Anular programación</span>
+                    </button>
+
+                    <button type="button" class="btn btn-xs btn-info" (click)="redirectToMain()">
+                        <span>Regresar</span>
+                    </button>
+                </div>
+            </div>
+
+            <ng-container *ngIf="!loading else isLoading">
+                <div class="row">
+                    <div class="col">
+                        <div class="row">
+                            <div class="col-md-4 col-sm-12"> <span class="float-right">Fecha de atención:</span></div>
+                            <div class="col-md-8 col-sm-12">
+                                <b>{{ dateStr | date:"dd/MM/yyyy" }}</b>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 col-sm-12"> <span class="float-right">Consultorio:</span></div>
+                            <div class="col-md-8 col-sm-12">
+                                <b>{{ (programmingTurnResult$ | async)?.medicalOffice?.officeName }}</b>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 col-sm-12"> <span class="float-right">Especialidad:</span></div>
+                            <div class="col-md-8 col-sm-12">
+                                <span class="badge badge-success" [ngStyle]="{background: programmingTurnResult$?.speciality?.color}">
+                                    {{ (programmingTurnResult$ | async)?.speciality?.name }}
+                                </span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 col-sm-12"> <span class="float-right">Médico / Profesional:</span>
+                            </div>
+                            <div class="col-md-8 col-sm-12">
+                                <b>{{ (programmingTurnResult$ | async)?.doctor?.firstName }} {{ (programmingTurnResult$
+                                    | async)?.doctor?.firstSurname }}</b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="row">
+                            <div class="col-md-4 col-sm-12"> <span class="float-right">Tipo de producto:</span></div>
+                            <div class="col-md-8 col-sm-12">
+                                <b>{{ (programmingTurnResult$ | async)?.productCategory?.name }}</b>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 col-sm-12"> <span class="float-right">Fecha de creación:</span></div>
+                            <div class="col-md-8 col-sm-12">
+                                <b>{{ (programmingTurnResult$ | async)?.createdAt | date:"dd/MM/yyyy HH:mm" }}</b>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 col-sm-12"> <span class="float-right">Estado:</span></div>
+                            <div class="col-md-8 col-sm-12">
+
+                                <ng-container *ngIf="(programmingTurnResult$ | async)?.active else isRunning">
+                                    <span class="badge badge-success">Activo</span>
+                                </ng-container>
+
+                                <ng-template #isRunning>
+                                    <span class="badge badge-danger">Inactivo</span>
+                                </ng-template>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+
+            <ng-template #isLoading>
+                <div class="alert alert-warning">
+                    <strong>Cargando registros...</strong>
+                </div>
+            </ng-template>
+
+
+        </app-card>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12 col-sm-12">
+        <app-card cardClass="card-datatable" [options]="false" [customHeader]="true">
+
+            <div class="app-card-header">
+                <h5>Lista de cupos</h5>
+
+                <div class="card-header-right">
+                    <button type="button" class="btn btn-xs btn-warning" (click)="loadPrommamingMedicalTurn()">
+                        <span><i class="fa fa-redo"></i> Refrescar</span>
+                    </button>
+                </div>
+
+            </div>
+
+            <ng-container *ngIf="!loading else isLoadingCoupons">
+                <div class="dt-responsive table-responsive">
+
+                    <p-table [value]="coupons">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th width="10%">Cupo</th>
+                                <th width="15%">Orden Venta</th>
+                                <th width="15%">Producto</th>
+                                <th>Paciente</th>
+                                <th width="10%">N. historia</th>
+                                <th width="10%">Estado</th>
+                                <th width="10%" class="text-center">Acciones</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-coupon>
+                            <ng-template #notElement>
+                                -
+                            </ng-template>
+
+                            <tr>
+                                <td class="text-center">
+                                    <span class="badge badge-danger" style="background: #8B008B;">{{ coupon.title }}</span>
+                                </td>
+                                <td>
+                                    <span class="badge badge-warning" *ngIf="(coupon.saleDetail != null && coupon.saleDetail.sale != null && coupon.saleDetail.sale.orderSales != null) else notElement">
+                                        {{ coupon.saleDetail?.sale?.orderSales }}
+                                    </span>
+                                </td>
+                                <td>
+                                    {{ (coupon.saleDetail != null && coupon.saleDetail.product != null) ? coupon.saleDetail?.product?.name : "-" }}
+                                </td>
+                                <td>
+                                    {{ (coupon.saleDetail != null && coupon.saleDetail.patientReservation != null) ? coupon.saleDetail?.patientReservation?.firstName+" "+ coupon.saleDetail?.patientReservation?.firstSurname : "-" }}
+                                </td>
+                                <td>
+                                    <span class="badge badge-info" *ngIf="(coupon.saleDetail != null && coupon.saleDetail.sale.patient != null) else notElement">
+                                        {{ coupon.saleDetail?.patientReservation?.historyNumber }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="badge badge-primary" [ngStyle]="{background: coupon.planningTurnStatus?.color}">
+                                        <i class="fa {{ coupon.planningTurnStatus?.icon }}"></i> {{
+                                        coupon.planningTurnStatus?.name }}
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <div class="text-center">
+                                        <button type="button" class="btn btn-sm btn-icon btn-warning" ngbPopover="Reprogramar turno" ç *ngIf="(coupon?.planningTurnStatus?.code == planningTurnStatusEnum.PendingAttention) || (coupon?.planningTurnStatus?.code == planningTurnStatusEnum.Anulated && coupon?.saleDetail?._id != null)"
+                                            (click)="modalReprogramming(coupon._id, coupon.saleDetail?._id)" triggers="mouseenter:mouseleave">
+                                            <i class="fa fa-clock"></i>
+                                        </button>
+
+                                        <button type="button" class="btn btn-sm btn-icon btn-success" ngbPopover="Ver atención" *ngIf="coupon?.planningTurnStatus?.code == planningTurnStatusEnum.Attended" (click)="goAttentionFormDetail(coupon)" placement="left" triggers="mouseenter:mouseleave">
+                                            <i class="fa fa-hospital"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+            </ng-container>
+
+            <ng-template #isLoadingCoupons>
+
+                <div class="alert alert-warning">
+                    <strong>Cargando Cupos..</strong>
+                </div>
+            </ng-template>
+        </app-card>
+    </div>
+</div>

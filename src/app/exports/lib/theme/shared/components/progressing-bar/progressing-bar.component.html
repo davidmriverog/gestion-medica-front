@@ -1,0 +1,8 @@
+<div class="container">
+    <div class="progress-outer">
+        <div class="progress">
+            <div class="progress-bar progress-bar-striped progress-bar-danger" [ngStyle]="{'width.%': (progress * 100)}"></div>
+            <div class="progress-value"><span>{{ (progress ? (progress * 100) : 0) | number:'1.1-2' }}</span>%</div>
+        </div>
+    </div>
+</div>

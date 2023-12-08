@@ -1,0 +1,18 @@
+<div class="form-group" [formGroup]="form">
+    <div class="row">
+        <div class="col-2">
+            <ui-label [text]="label"></ui-label>
+        </div>
+        <div *ngIf="showMode; else hidden" class="col-5">
+            <ui-dropdown bindLabel="label" bindValue="value"
+                [items]="filterOptions" [group]="form" formControlName="type">
+            </ui-dropdown>
+        </div>
+        <ng-template #hidden>
+            <input type="hidden" formControlName="type">
+        </ng-template>
+        <div [ngClass]="showMode?'col-5':'col-10'">
+            <ui-text-box [group]="form" formControlName="value"></ui-text-box>
+        </div>
+    </div>
+</div>

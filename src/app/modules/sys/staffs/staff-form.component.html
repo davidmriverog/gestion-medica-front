@@ -1,0 +1,102 @@
+<ui-modal-form title="Datos del personal" [buttonClose]="true" [buttonSubmit]="true" [formGroup]="formGroup"
+  (formSubmit)="submit($event)">
+
+  <input type="hidden" [formControlName]="modelIdPropertyName" />
+  <input type="hidden" formControlName="createdAt" />
+
+  <div class="row">
+
+    <div class="col-6">
+      <div class="form-group">
+        <ui-label [group]="formGroup" name="firstName" text="Nombres" message="Nombre del empleado"></ui-label>
+        <ui-text-box [group]="formGroup" formControlName="firstName"></ui-text-box>
+        <ui-validators [group]="formGroup" name="firstName"></ui-validators>
+      </div>
+    </div>
+
+    <div class="col-6">
+      <div class="form-group">
+        <ui-label [group]="formGroup" name="lastName" text="Apellidos" message="Apellido del empleado"></ui-label>
+        <ui-text-box [group]="formGroup" formControlName="lastName"></ui-text-box>
+        <ui-validators [group]="formGroup" name="lastName"></ui-validators>
+      </div>
+    </div>
+
+  </div>
+
+
+  <div class="row">
+    <div class="col-6">
+      <div class="form-group">
+        <ui-label [group]="formGroup" name="documentTypeId" text="Tipo de documento"
+          message="Tipo de documento del empleado"></ui-label>
+        <ui-dropdown [group]="formGroup" formControlName="documentTypeId" bindLabel="name" bindValue="_id"
+          (change)="onDocumentTypeSelected($event)" [items]="(documentTypes$ | async)">
+        </ui-dropdown>
+        <ui-validators [group]="formGroup" name="documentTypeId"></ui-validators>
+      </div>
+    </div>
+
+    <div class="col-6">
+      <ui-label [group]="formGroup" name="documentNumber" text="Nro. Documento"
+        message="Nro. de documento del empleado"></ui-label>
+      <ui-form-mask [group]="formGroup" formControlName="documentNumber" [masked]="maskDocumentNumber"></ui-form-mask>
+      <ui-validators [group]="formGroup" name="documentNumber"></ui-validators>
+    </div>
+  </div>
+
+  <div class="row">
+
+    <div class="col-6">
+      <div class="form-group">
+        <ui-label name="birthDate" text="Fecna de Nacimiento" message="Fecha de nacimiento del empleado"></ui-label>
+        <ui-form-date formControlName="birthDate"></ui-form-date>
+        <ui-validators name="birthDate"></ui-validators>
+      </div>
+    </div>
+
+    <div class="col-6">
+      <div class="form-group">
+        <ui-label name="gender" text="Sexo:"></ui-label> <br>
+        <div class="form-check form-check-inline">
+          <ui-form-radio formControlName="gender" [inline]="true" label="Masculino" [value]="genderEnum.Male">
+          </ui-form-radio>
+          <ui-form-radio formControlName="gender" [inline]="true" label="Femenino" [value]="genderEnum.Female">
+          </ui-form-radio>
+        </div>
+        <ui-validators name="gender"></ui-validators>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-6">
+      <div class="form-group">
+        <ui-label [group]="formGroup" name="cellphone" text="Celular" message="Teléfono del empleado"></ui-label>
+        <ui-form-mask [group]="formGroup" formControlName="cellphone" masked="000.000.000"></ui-form-mask>
+        <ui-validators [group]="formGroup" name="cellphone"></ui-validators>
+      </div>
+    </div>
+
+    <div class="col-6">
+      <div class="form-group">
+        <ui-label [group]="formGroup" name="emailAddress" text="E-Mail" message="Correo electrónico del empleado">
+        </ui-label>
+        <ui-text-box [group]="formGroup" formControlName="emailAddress"></ui-text-box>
+        <ui-validators [group]="formGroup" name="emailAddress"></ui-validators>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <div class="form-group">
+        <ui-label [group]="formGroup" name="addresses" text="Dirección" message="Dirección habitacional del empleado">
+        </ui-label>
+        <ui-text-area [group]="formGroup" formControlName="addresses" rows="3"></ui-text-area>
+        <ui-validators [group]="formGroup" name="addresses"></ui-validators>
+      </div>
+    </div>
+  </div>
+
+</ui-modal-form>

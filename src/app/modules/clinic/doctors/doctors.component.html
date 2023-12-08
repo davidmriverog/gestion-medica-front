@@ -1,0 +1,117 @@
+<div class="row">
+
+  <div class="col-12">
+
+    <div class="row justify-content-end mb-4">
+      <div class="col">
+        <button type="button" class="btn btn-xs btn-danger mr-2 float-right" (click)="download()" placement="top"
+          ngbTooltip="Descargar plantilla excel para importar nuevos médicos">
+          Descargar (.xlsx)
+        </button>
+
+        <button type="button" class="btn btn-xs btn-warning mr-2 float-right" (click)="import()" placement="top"
+          ngbTooltip="Importar nueva carga de médicos">
+          Importar (.xlsx)
+        </button>
+
+        <button type="button" class="btn btn-xs btn-success mr-2 float-right" (click)="newDoctor()">
+          Nuevo Médico
+        </button>
+      </div>
+    </div>
+
+    <app-card [hidHeader]="false" cardClass="card-datatable" customHeader="true">
+
+      <div class="app-card-header">
+        <h5>Listado de doctores</h5>
+        <div class="card-header-right">
+
+          <button type="button" class="btn btn-xs btn-warning ml-1" (click)="adminTable.refreshing()">
+            <span><i class="fa fa-redo"></i> Refrescar</span>
+          </button>
+
+          <button type="button" class="btn btn-xs btn-primary ml-1" (click)="adminTable.clearFilters()">
+            <span><i class="fa fa-eraser"></i> Limpiar</span>
+          </button>
+
+          <button type="button" class="btn btn-xs btn-danger ml-1" (click)="adminTable.openFilter()">
+            <span><i class="fa fa-filter"></i> Filtros</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="dt-responsive">
+        <ui-admin-table #adminTable (refresh)="onRefresh($event)" [apiRecords]="(records$ | async)" [pageSize]="15">
+          <ng-template #contentFiltered>
+            <div class="row">
+              <div class="col-12">
+                <ui-text-filter label="Nombres" property="firstName" mode="like">
+                </ui-text-filter>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-12">
+                <ui-text-filter label="Apellidos" property="lastName" mode="like">
+                </ui-text-filter>
+              </div>
+            </div>
+
+          </ng-template>
+
+          <p-table>
+            <ng-template pTemplate="header">
+              <tr>
+                <th scope="col">Medico</th>
+                <th scope="col" style="width: 10%">Tipo Doc.</th>
+                <th scope="col" style="width: 10%">Nro. Doc.</th>
+                <th scope="col" style="width: 10%">Fecha Nac.</th>
+                <th scope="col" style="width: 10%">Sexo</th>
+                <th scope="col">Profesion</th>
+                <th scope="col" style="width: 10%">Teléfono</th>
+                <th scope="col" style="width: 15%" class="text-center">
+                  Acciones
+                </th>
+              </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-row>
+              <tr [pContextMenuRow]="row" [pSelectableRow]="row">
+
+                <td>
+                  <span class="badge badge-primary">
+                    {{ row.firstName }}, {{ row.firstSurname }}
+                  </span>
+                </td>
+
+                <td>{{ row.documentType?.name }}</td>
+                <td>{{ row.documentNumber }}</td>
+                <td>{{ row.birthDate | date: 'dd-MM-yyyy' }}</td>
+                <td>{{ row.gender == genderEnum.Male ? 'Masculino' : 'Femenino' }}</td>
+                <td>{{ row.collegeDegree }}</td>
+                <td>{{ row.cellphone }}</td>
+                <td class="text-center">
+                  <button type="button" class="btn btn-sm btn-success mr-2" (click)="editDoctor(row)">
+                    <i class="feather icon-edit"></i>
+                  </button>
+
+                  <button type="button" class="btn btn-sm btn-danger" (click)="delete(row._id)">
+                    <i class="feather icon-trash"></i>
+                  </button>
+                </td>
+              </tr>
+            </ng-template>
+
+            <ng-template pTemplate="emptymessage" let-columns>
+              <tr>
+                <td [attr.colspan]="9">
+                  No records found
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </ui-admin-table>
+      </div>
+    </app-card>
+  </div>
+</div>

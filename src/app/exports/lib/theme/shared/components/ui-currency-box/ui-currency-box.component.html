@@ -1,0 +1,12 @@
+<div>
+
+    <input type="text"
+    	class="form-control"
+    	[(ngModel)]="amount"
+    	#innerInput
+    	[disabled]="disabled"
+    	(ngModelChange)="onChange($event)"
+    	currencyMask [options]="{ thousands: ',', decimal: '.', align: 'right', precision: decimal, prefix: prefix }"
+        [ngClass]="{ 'is-invalid': formGroup && control && control.errors && (formGroup.touched || control.touched) }"
+     />
+</div>

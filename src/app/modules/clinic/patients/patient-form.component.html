@@ -1,0 +1,187 @@
+<ui-modal-form title="Paciente | Formulario" [buttonClose]="true" [buttonSubmit]="true" [formGroup]="formGroup"
+  (formSubmit)="submit($event)" (formValidate)="onValidationError($event)">
+
+  <input type="hidden" [formControlName]="modelIdPropertyName" />
+  <input type="hidden" formControlName="createdAt" />
+  <input type="hidden" formControlName="historyNumber" />
+
+  <div class="row" *ngIf="errorMessages && errorMessages.length > 0">
+    <div class="col-md-12">
+      <div class="alert alert-warning">
+        <strong>Por favor, verifique estos campos estén completamente llenos o válidos!</strong>
+        <ul *ngFor="let error of errorMessages">
+          <li>{{ getAliasFieldByKey(error.key) }} {{ error.message }}</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <p-tabView>
+
+    <p-tabPanel>
+      <ng-template pTemplate="header">
+        <i class="fa fa-user"></i>
+        <span class="ml-2">Ficha personal</span>
+      </ng-template>
+
+      <div class="row">
+
+        <div class="col-6">
+          <div class="form-group">
+            <ui-label [group]="formGroup" name="documentTypeId" text="Tipo de documento"
+              message="Tipo de documentación del paciente"></ui-label>
+            <ui-dropdown [group]="formGroup" formControlName="documentTypeId" bindLabel="name" bindValue="_id"
+              (change)="onDocumentTypeSelected($event)" [items]="(documentTypes$ | async)">
+            </ui-dropdown>
+            <ui-validators [group]="formGroup" name="documentTypeId"></ui-validators>
+          </div>
+        </div>
+
+        <div class="col-6">
+          <div class="form-group">
+
+            <ui-label [group]="formGroup" name="documentNumber" text="Nro. documento"
+              message="nro. de documento según el tipo de identificación"></ui-label>
+
+            <ui-text-box [group]="formGroup" formControlName="documentNumber"></ui-text-box>
+
+            <ui-validators [group]="formGroup" name="documentNumber"></ui-validators>
+
+          </div>
+        </div>
+
+      </div>
+
+      <div class="row">
+        <div class="col-6">
+          <div class="form-group">
+            <ui-label [group]="formGroup" name="firstName" text="Primer nombre" message="Primer nombre del paciente">
+            </ui-label>
+            <ui-text-box [group]="formGroup" formControlName="firstName" placeholder="Ingrese primer nombre ..."
+              #firstname></ui-text-box>
+            <ui-validators [group]="formGroup" name="firstName"></ui-validators>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="form-group">
+            <ui-label [group]="formGroup" name="secondName" text="Segundo nombre" message="Segundo nombre del paciente">
+            </ui-label>
+            <ui-text-box [group]="formGroup" formControlName="secondName" placeholder="Ingrese segundo nombre ...">
+            </ui-text-box>
+            <ui-validators [group]="formGroup" name="secondName"></ui-validators>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-6">
+          <div class="form-group">
+            <ui-label [group]="formGroup" name="firstSurname" text="Apellido Paterno"
+              message="Primer apellido del paciente"></ui-label>
+            <ui-text-box [group]="formGroup" formControlName="firstSurname" placeholder="Ingrese apellido paterno ...">
+            </ui-text-box>
+            <ui-validators [group]="formGroup" name="firstSurname"></ui-validators>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="form-group">
+            <ui-label [group]="formGroup" name="secondSurname" text="Apellido Materno"
+              message="Segundo apellido del paciente"></ui-label>
+            <ui-text-box [group]="formGroup" formControlName="secondSurname" placeholder="Ingrese apellido materno ...">
+            </ui-text-box>
+            <ui-validators [group]="formGroup" name="secondSurname"></ui-validators>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-6">
+          <div class="form-group">
+            <ui-label [group]="formGroup" name="birthDate" text="Fecna de Nacimiento"
+              message="Fecha de nacimiento del paciente"></ui-label>
+            <ui-form-date [group]="formGroup" formControlName="birthDate" placeholder="Ingrese fecha de nacimiento ...">
+            </ui-form-date>
+            <ui-validators [group]="formGroup" name="birthDate"></ui-validators>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="form-group">
+            <ui-label [group]="formGroup" name="gender" text="Sexo:"></ui-label> <br>
+            <div class="form-check form-check-inline">
+              <ui-form-radio [group]="formGroup" formControlName="gender" [inline]="true" label="Masculino"
+                [value]="genderEnum.Male">
+              </ui-form-radio>
+              <ui-form-radio [group]="formGroup" formControlName="gender" [inline]="true" label="Femenino"
+                [value]="genderEnum.Female">
+              </ui-form-radio>
+            </div>
+            <ui-validators [group]="formGroup" name="gender"></ui-validators>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12">
+          <div class="form-group">
+            <ui-label [group]="formGroup" name="emailAddress" text="Correo electrónico"
+              message="Correo electrónico del paciente"></ui-label>
+            <ui-text-box [group]="formGroup" formControlName="emailAddress"></ui-text-box>
+            <ui-validators [group]="formGroup" name="emailAddress"></ui-validators>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-6">
+          <div class="form-group">
+            <ui-label [group]="formGroup" name="cellphone" text="Teléfono 1"
+              message="Teléfono de contacto, si es menor de edad colocar del padré o la madre o algún representante">
+            </ui-label>
+            <ui-text-box [group]="formGroup" formControlName="cellphone"></ui-text-box>
+            <ui-validators [group]="formGroup" name="cellphone"></ui-validators>
+          </div>
+        </div>
+
+        <div class="col-6">
+          <div class="form-group">
+            <ui-label [group]="formGroup" name="phone" text="Teléfono 2" message="Teléfono, campo opcional">
+            </ui-label>
+            <ui-text-box [group]="formGroup" formControlName="phone"></ui-text-box>
+            <ui-validators [group]="formGroup" name="phone"></ui-validators>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="row">
+        <div class="col-12">
+          <div class="form-group">
+            <ui-check-box [group]="formGroup" formControlName="active" label="Activo"></ui-check-box>
+            <ui-validators [group]="formGroup" name="active"></ui-validators>
+          </div>
+        </div>
+      </div>
+
+
+    </p-tabPanel>
+
+    <p-tabPanel>
+      <ng-template pTemplate="header">
+        <i class="fa fa-map-marker-alt"></i>
+        <span class="ml-2">Ubicación</span>
+      </ng-template>
+
+      <div class="row">
+        <div class="col-12">
+          <div class="form-group">
+            <ui-label [group]="formGroup" name="addresses" text="Lugar de domicilio"
+              message="Dirección habitacional del paciente, EJ: Comas Perú."></ui-label>
+            <ui-text-area [group]="formGroup" formControlName="addresses" [rows]="5"></ui-text-area>
+            <ui-validators [group]="formGroup" name="addresses"></ui-validators>
+          </div>
+        </div>
+      </div>
+    </p-tabPanel>
+  </p-tabView>
+
+</ui-modal-form>

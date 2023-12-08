@@ -1,0 +1,239 @@
+<ui-modal-form title="Doctores | Formulario" [buttonClose]="true" [buttonSubmit]="true" [formGroup]="formGroup"
+  (formSubmit)="submit($event)" (formValidate)="onValidationError($event)">
+
+  <input type="hidden" [formControlName]="modelIdPropertyName" />
+  <input type="hidden" formControlName="createdAt" />
+
+  <div class="row" *ngIf="errorMessages && errorMessages.length > 0">
+    <div class="col-md-12">
+      <div class="alert alert-warning">
+        <strong>Por favor, verifique estos campos estén completamente llenos o válidos!</strong>
+        <ul *ngFor="let error of errorMessages">
+          <li>{{ getAliasFieldByKey(error.key) }} {{ error.message }}</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <p-tabView>
+
+    <p-tabPanel>
+      <ng-template pTemplate="header">
+        <i class="fa fa-id-card"></i>
+        <span class="ml-2">Identidad y domicilio</span>
+      </ng-template>
+
+      <div class="row">
+        <div class="col-6">
+          <div class="form-group">
+            <ui-label [group]="formGroup" name="documentTypeId" text="Tipo de documento"
+              message="Tipo de documento EJ: DNI, PTP, OTROS..."></ui-label>
+            <ui-dropdown [group]="formGroup" formControlName="documentTypeId" bindLabel="name" bindValue="_id"
+              (change)="onDocumentTypeSelected($event)" [items]="(documentTypes$ | async)">
+            </ui-dropdown>
+            <ui-validators [group]="formGroup" name="documentTypeId"></ui-validators>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="form-group">
+
+            <ui-label [group]="formGroup" name="documentNumber" text="Nro. documento"
+              message="Nro. de identificación según el tipo de documento">
+            </ui-label>
+
+            <ui-text-box [group]="formGroup" formControlName="documentNumber"></ui-text-box>
+
+            <ui-validators [group]="formGroup" name="documentNumber"></ui-validators>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12">
+          <div class="form-group">
+            <ui-label [group]="formGroup" name="address" text="Lugar de domicilio"
+              message="Dirección de habitación EJ: Comas, Perú."></ui-label>
+            <ui-text-area [group]="formGroup" formControlName="address" [rows]="5"></ui-text-area>
+            <ui-validators [group]="formGroup" name="address"></ui-validators>
+          </div>
+        </div>
+      </div>
+    </p-tabPanel>
+
+    <p-tabPanel>
+      <ng-template pTemplate="header">
+        <i class="fa fa-user"></i>
+        <span class="ml-2">Ficha personal</span>
+      </ng-template>
+
+      <div class="row">
+        <div class="col-6">
+          <div class="form-group">
+            <ui-label [group]="formGroup" name="firstName" text="Primer nombre" message="Primer nombre del médico">
+            </ui-label>
+            <ui-text-box [group]="formGroup" formControlName="firstName" placeholder="Ingrese primer nombre ..."
+              #firstname></ui-text-box>
+            <ui-validators [group]="formGroup" name="firstName"></ui-validators>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="form-group">
+            <ui-label [group]="formGroup" name="secondName" text="Segundo nombre"
+              message="Segundo nombre del médico, campo opcional">
+            </ui-label>
+            <ui-text-box [group]="formGroup" formControlName="secondName" placeholder="Ingrese segundo nombre ...">
+            </ui-text-box>
+            <ui-validators [group]="formGroup" name="secondName"></ui-validators>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-6">
+          <div class="form-group">
+            <ui-label [group]="formGroup" name="firstSurname" text="Apellido Paterno"
+              message="Apellido paterno del médico">
+            </ui-label>
+            <ui-text-box [group]="formGroup" formControlName="firstSurname" placeholder="Ingrese apellido paterno ...">
+            </ui-text-box>
+            <ui-validators [group]="formGroup" name="firstSurname"></ui-validators>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="form-group">
+            <ui-label [group]="formGroup" name="secondSurname" text="Apellido Materno"
+              message="Apellido materno del médico">
+            </ui-label>
+            <ui-text-box [group]="formGroup" formControlName="secondSurname" placeholder="Ingrese apellido materno ...">
+            </ui-text-box>
+            <ui-validators [group]="formGroup" name="secondSurname"></ui-validators>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-6">
+          <div class="form-group">
+            <ui-label [group]="formGroup" name="birthDate" text="Fecna de Nacimiento"
+              message="Fecha de nacimiento del médico">
+            </ui-label>
+            <ui-form-date [group]="formGroup" formControlName="birthDate" placeholder="Ingrese fecha de nacimiento ...">
+            </ui-form-date>
+            <ui-validators [group]="formGroup" name="birthDate"></ui-validators>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="form-group">
+            <ui-label [group]="formGroup" name="gender" text="Sexo:"></ui-label> <br>
+            <div class="form-check form-check-inline">
+              <ui-form-radio [group]="formGroup" formControlName="gender" [inline]="true" label="Masculino"
+                [value]="genderEnum.Male">
+              </ui-form-radio>
+              <ui-form-radio [group]="formGroup" formControlName="gender" [inline]="true" label="Femenino"
+                [value]="genderEnum.Female">
+              </ui-form-radio>
+            </div>
+            <ui-validators [group]="formGroup" name="gender"></ui-validators>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12">
+          <div class="form-group">
+            <ui-label [group]="formGroup" name="email" text="Correo electrónico"
+              message="Correo electrónico del médico">
+            </ui-label>
+            <ui-text-box [group]="formGroup" formControlName="email"></ui-text-box>
+            <ui-validators [group]="formGroup" name="email"></ui-validators>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+
+        <div class="col-6">
+          <div class="form-group">
+            <ui-label [group]="formGroup" name="cellphone" text="Teléfono 1"
+              message="Teléfono de contacto según su localidad."></ui-label>
+            <ui-text-box [group]="formGroup" formControlName="cellphone"></ui-text-box>
+            <ui-validators [group]="formGroup" name="cellphone"></ui-validators>
+          </div>
+        </div>
+
+        <div class="col-6">
+          <div class="form-group">
+            <ui-label [group]="formGroup" name="phone" text="Teléfono 2"
+              message="Teléfono de contacto según su localidad">
+            </ui-label>
+            <ui-text-box [group]="formGroup" formControlName="phone"></ui-text-box>
+          </div>
+        </div>
+
+      </div>
+    </p-tabPanel>
+
+    <p-tabPanel>
+      <ng-template pTemplate="header">
+        <i class="fa fa-user-med"></i>
+        <span class="ml-2">Datos de profesión</span>
+      </ng-template>
+
+      <div class="row">
+        <div class="col-6">
+          <div class="form-group">
+            <ui-label [group]="formGroup" name="collegeDegree" text="Título universitario"
+              message="Título universitario del médico EJ: Lic. en Medicina general"></ui-label>
+            <ui-text-box [group]="formGroup" formControlName="collegeDegree"
+              placeholder="Ingrese título universitario..."></ui-text-box>
+            <ui-validators [group]="formGroup" name="collegeDegree"></ui-validators>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="form-group">
+            <ui-label [group]="formGroup" name="profession" text="Profesión" message="Profesión actual, EJ: Ginecologo">
+            </ui-label>
+            <ui-text-box [group]="formGroup" formControlName="profession" placeholder="Ingrese profesión ...">
+            </ui-text-box>
+            <ui-validators [group]="formGroup" name="profession"></ui-validators>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12">
+          <div class="form-group">
+            <ui-label [group]="formGroup" name="specialityId" text="Especialidad" message="Especialidad de profesión">
+            </ui-label>
+            <ui-dropdown [group]="formGroup" formControlName="specialityId" bindLabel="name" bindValue="_id"
+              [items]="(specialities$ | async)">
+            </ui-dropdown>
+            <ui-validators [group]="formGroup" name="specialityId"></ui-validators>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-6">
+          <div class="form-group">
+            <ui-label [group]="formGroup" name="cmp" text="Nro. de Colegiatura" message="Nro. de colegiatura única">
+            </ui-label>
+            <ui-text-box [group]="formGroup" formControlName="cmp" placeholder="Ingrese Nro. Colegiatura Médica ...">
+            </ui-text-box>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="form-group">
+            <ui-label [group]="formGroup" name="rne" text="Nro. de registro Especialidad"
+              message="Nro. de registro de especialidad (opcional)"></ui-label>
+            <ui-text-box [group]="formGroup" formControlName="rne"
+              placeholder="Ingrese Nro de Registro Especialidad ..."></ui-text-box>
+          </div>
+        </div>
+      </div>
+
+    </p-tabPanel>
+
+  </p-tabView>
+
+</ui-modal-form>

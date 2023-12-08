@@ -1,0 +1,11 @@
+<div class="modal-header">
+    <h4 class="modal-title">Filtrado de datos</h4>
+</div>
+<div class="modal-body">
+    <ng-container *ngTemplateOutlet="filtersDef;context"></ng-container>
+</div>
+
+<div class="modal-footer">
+    <button class="btn btn-default" (click)="cancel()" type="button">Cancelar</button>
+    <button class="btn btn-success" (click)="filter()" type="button">Filtrar</button>
+</div>

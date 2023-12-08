@@ -1,0 +1,38 @@
+
+  <div class="row">
+
+    <div class="col-md-6 col-xl-4">
+      <app-card [hidHeader]="true" cardClass="bg-c-green notification-card">
+        <div class="row align-items-center">
+          <div class="col-4 notify-icon"><i class="fa fa-file-invoice-dollar"></i></div>
+          <div class="col-8 notify-cont">
+            <h4>{{ (saleCountDale$ | async)?.totalCash ? (saleCountDale$ | async)?.totalCash : 0 }}</h4>
+            <p>Total ventas abonadas por día</p>
+          </div>
+        </div>
+      </app-card>
+    </div>
+    <div class="col-md-6 col-xl-4">
+      <app-card [hidHeader]="true" cardClass="bg-c-red notification-card">
+        <div class="row align-items-center">
+          <div class="col-4 notify-icon"><i class="fa fa-file-invoice-dollar"></i></div>
+          <div class="col-8 notify-cont">
+            <h4>{{ (saleCountDale$ | async)?.totalAnullment ? (saleCountDale$ | async)?.totalAnullment : 0 }}</h4>
+            <p>Total ventas anuladas por día</p>
+          </div>
+        </div>
+      </app-card>
+    </div>
+    <div class="col-md-6 col-xl-4">
+      <app-card [hidHeader]="true" cardClass="bg-c-blue notification-card">
+        <div class="row align-items-center">
+          <div class="col-4 notify-icon"><i class="fa fa-file-invoice-dollar"></i></div>
+          <div class="col-8 notify-cont">
+            <h4>{{ (saleCountDale$ | async)?.totalInvoice ? (saleCountDale$ | async)?.totalInvoice : 0 }}</h4>
+            <p>Total ventas por día</p>
+          </div>
+        </div>
+      </app-card>
+    </div>
+
+  </div>

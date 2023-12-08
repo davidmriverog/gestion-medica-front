@@ -1,0 +1,207 @@
+<div class="container-fluid">
+
+  <div class="row">
+
+    <div class="col">
+      <app-card [hidHeader]="true" cardClass="bg-c-yellow order-card">
+        <h6 class="text-white">Saldo inicial del mes.</h6>
+        <h2 class="text-right text-white" style="font-size: 16px"><i class="feather icon-repeat float-left"></i><span>{{
+            lastBalance | number:'1.1-2' }}</span>
+        </h2>
+      </app-card>
+    </div>
+
+    <div class="col">
+      <app-card [hidHeader]="true" cardClass="bg-c-green order-card">
+        <h6 class="text-white">Ingresos</h6>
+        <h2 class="text-right text-white" style="font-size: 16px"><i class="fas fa-arrow-up float-left"></i><span>{{
+            totalIncome | number:'1.1-2' }}</span>
+        </h2>
+      </app-card>
+    </div>
+
+    <div class="col">
+      <app-card [hidHeader]="true" cardClass="bg-c-red order-card">
+        <h6 class="text-white">Egresos</h6>
+        <h2 class="text-right text-white" style="font-size: 16px"><i class="fas fa-arrow-down float-left"></i><span>{{
+            totalExpense | number:'1.1-2' }}</span>
+        </h2>
+      </app-card>
+    </div>
+
+    <div class="col">
+      <app-card [hidHeader]="true" cardClass="bg-c-purple order-card">
+        <h6 class="text-white">Saldo</h6>
+        <h2 class="text-right text-white" style="font-size: 16px"><i class="fas fa-dollar-sign float-left"></i><span>{{
+            balance | number:'1.1-2' }}</span>
+        </h2>
+      </app-card>
+    </div>
+  </div>
+
+  <div class="row">
+
+    <div class="col-12">
+      <app-card cardTitle="Cuenta corriente del periodo" cardClass="card-datatable" [options]="false"
+        [customHeader]="true">
+        <div class="app-card-header">
+          <h5>Cuenta corriente</h5>
+
+          <div class="card-header-right">
+            <button type="button" class="btn btn-xs btn-warning ml-1"
+              (click)="fetchCurrentAccount(); adminTable.refreshing();">
+              <span><i class="fa fa-redo"></i> Refrescar</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="dt-responsive">
+          <ui-admin-table #adminTable (refresh)="onRefresh($event)" [apiRecords]="(records$ | async)" [pageSize]="15">
+            <ng-template #contentFiltered>
+
+            </ng-template>
+
+            <p-table>
+              <ng-template pTemplate="header">
+                <tr>
+                  <th scope="col" width="15%">Fecha</th>
+                  <th scope="col">Concepto</th>
+                  <th scope="col" width="15%">Tipo</th>
+                  <th scope="col" width="15%">Monto</th>
+                  <th scope="col" width="15%">Nro. referencia</th>
+                </tr>
+              </ng-template>
+
+              <ng-template pTemplate="body" let-row>
+                <tr [pContextMenuRow]="row" [pSelectableRow]="row">
+
+                  <td>
+                    {{ row.createdAt | date:'dd-MM-yyyy HH:mm' }}
+                  </td>
+                  <td>
+                    {{ row.concept }}
+                  </td>
+                  <td>
+                    <span class="badge" [ngClass]="{
+                       'badge-success': row.type == operationTypeEnum.Income,
+                       'badge-danger': row.type == operationTypeEnum.Expense
+                     }">
+                      {{ row.type == operationTypeEnum.Income ? 'Ingreso' : 'Egreso' }}
+                    </span>
+                  </td>
+                  <td>
+                    <span [ngClass]="{
+                          'text-success': row.type == operationTypeEnum.Income,
+                          'text-danger': row.type == operationTypeEnum.Expense
+                      }">
+                      {{ row.type == operationTypeEnum.Income ? '+' : '-' }}
+                      {{ row.amount | number:'1.1-2' }}
+                    </span>
+                  </td>
+                  <td>
+                    <span class="badge badge-primary">{{ row.transactionOperationCode }}</span>
+                  </td>
+                </tr>
+              </ng-template>
+
+              <ng-template pTemplate="emptymessage" let-columns>
+                <tr>
+                  <td [attr.colspan]="5">
+                    No records found
+                  </td>
+                </tr>
+              </ng-template>
+            </p-table>
+          </ui-admin-table>
+        </div>
+
+      </app-card>
+    </div>
+
+  </div>
+
+  <hr>
+
+  <div class="row">
+
+    <div class="col-md-6 col-xl-4">
+      <app-card [hidHeader]="true" cardClass="bg-c-green notification-card">
+        <div class="row align-items-center">
+          <div class="col-4 notify-icon"><i class="fa fa-file-invoice-dollar"></i></div>
+          <div class="col-8 notify-cont">
+            <h4>{{ (saleCountDale$ | async)?.totalCash ? (saleCountDale$ | async)?.totalCash : 0 }}</h4>
+            <p>Total ventas abonadas por día</p>
+          </div>
+        </div>
+      </app-card>
+    </div>
+    <div class="col-md-6 col-xl-4">
+      <app-card [hidHeader]="true" cardClass="bg-c-red notification-card">
+        <div class="row align-items-center">
+          <div class="col-4 notify-icon"><i class="fa fa-file-invoice-dollar"></i></div>
+          <div class="col-8 notify-cont">
+            <h4>{{ (saleCountDale$ | async)?.totalAnullment ? (saleCountDale$ | async)?.totalAnullment : 0 }}</h4>
+            <p>Total ventas anuladas por día</p>
+          </div>
+        </div>
+      </app-card>
+    </div>
+    <div class="col-md-6 col-xl-4">
+      <app-card [hidHeader]="true" cardClass="bg-c-blue notification-card">
+        <div class="row align-items-center">
+          <div class="col-4 notify-icon"><i class="fa fa-file-invoice-dollar"></i></div>
+          <div class="col-8 notify-cont">
+            <h4>{{ (saleCountDale$ | async)?.totalInvoice ? (saleCountDale$ | async)?.totalInvoice : 0 }}</h4>
+            <p>Total ventas por día</p>
+          </div>
+        </div>
+      </app-card>
+    </div>
+
+  </div>
+
+  <hr>
+
+  <div class="row">
+    <div class="col-sm-12 col-md-12">
+      <app-card [hidHeader]="true" blockClass="text-center">
+        <i class="fa fa-user-md text-c-blue d-block f-40"></i>
+        <h4 class="m-t-20"><span class="text-c-blue">{{ (dashboardAttentionAdmin$ | async)?.total ? (dashboardAttentionAdmin$ | async)?.total : "0" }}</span> Total atenciones</h4>
+        <p class="m-b-20">Total de atencion(es) por día</p>
+      </app-card>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12 col-lg-6">
+      <app-card [hidHeader]="true" blockClass="text-center">
+        <i class="fa fa-street-view text-c-blue d-block f-40"></i>
+        <h4 class="m-t-20"><span class="text-c-blue">{{ (dashboardAttentionAdmin$ | async)?.available ? (dashboardAttentionAdmin$ | async)?.available : "0" }}</span> Disponibles</h4>
+        <p class="m-b-20">Atenciones disponibles por día</p>
+      </app-card>
+    </div>
+    <div class="col-md-6 col-lg-6">
+      <app-card [hidHeader]="true" blockClass="text-center">
+        <i class="fa fa-user-clock text-c-yellow d-block f-40"></i>
+        <h4 class="m-t-20"><span class="text-c-blue">{{ (dashboardAttentionAdmin$ | async)?.pending ? (dashboardAttentionAdmin$ | async)?.pending : "0" }}</span> Por atender</h4>
+        <p class="m-b-20">Atenciones por atender en el día</p>
+      </app-card>
+    </div>
+    <div class="col-md-6 col-lg-6">
+      <app-card [hidHeader]="true" blockClass="text-center">
+        <i class="fa fa-user-check text-c-green d-block f-40"></i>
+        <h4 class="m-t-20"><span class="text-c-blue">{{ (dashboardAttentionAdmin$ | async)?.attended ? (dashboardAttentionAdmin$ | async)?.attended : "0" }}</span> Atendidas</h4>
+        <p class="m-b-20">Atenciones atendidas en el día</p>
+      </app-card>
+    </div>
+
+    <div class="col-md-6 col-lg-6">
+      <app-card [hidHeader]="true" blockClass="text-center">
+        <i class="fa fa-user-times text-c-red d-block f-40"></i>
+        <h4 class="m-t-20"><span class="text-c-blue">{{ (dashboardAttentionAdmin$ | async)?.anulated ? (dashboardAttentionAdmin$ | async)?.anulated : "0" }}</span> Anulados</h4>
+        <p class="m-b-20">Atenciones anuladas en el día</p>
+      </app-card>
+    </div>
+  </div>
+
+</div>

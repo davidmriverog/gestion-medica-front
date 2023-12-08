@@ -1,0 +1,358 @@
+<ng-container *ngIf="(actMedical$ | async) != null else isLoading">
+
+  <div class="row">
+    <div class="col-12">
+      <app-card cardClass="card-datatable" [options]="false" [customHeader]="true">
+
+        <div class="app-card-header">
+          <h5>Datos del paciente</h5>
+          <div class="card-header-right">
+
+            <button type="button" class="btn btn-xs btn-info" (click)="redirectToMain()">
+              <span>Regresar</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6 col-sm-12">
+            <strong>Apellido(s) y nombre(s)</strong><br>
+            <span>
+              {{ ( actMedical$ | async)?.planningMedicalCouponTurn?.saleDetail?.sale?.patient?.firstName }}
+              {{ (actMedical$ | async)?.planningMedicalCouponTurn?.saleDetail?.sale?.patient?.firstSurname }}
+            </span>
+          </div>
+
+          <div class="col-md-2 col-sm-6">
+            <strong>Género</strong><br>
+            <span>
+              {{ (actMedical$ | async)?.planningMedicalCouponTurn?.saleDetail?.sale?.patient?.gender == "M" ?
+              "Masculino" : "Femenino" }}
+            </span>
+          </div>
+
+          <div class="col-md-2 col-sm-6">
+            <strong>Nro. historia</strong><br>
+            <span class="badge badge-success">
+              {{ (actMedical$ | async)?.planningMedicalCouponTurn?.saleDetail?.sale?.patient?.historyNumber }}
+            </span>
+          </div>
+
+          <div class="col-md-2 col-sm-6">
+            <strong>Edad</strong><br>
+            <span>
+              {{ showAge((actMedical$ | async)?.planningMedicalCouponTurn?.saleDetail?.sale?.patient?.birthDate) }}
+            </span>
+          </div>
+
+        </div>
+
+      </app-card>
+    </div>
+  </div>
+
+  <hr>
+
+  <div class="row">
+    <div class="col-12">
+      <app-card cardClass="card-datatable" [options]="false" [customHeader]="true">
+
+        <div class="app-card-header">
+          <h5>Atención médica</h5>
+        </div>
+
+        <div class="row">
+          <div class="col-12">
+
+            <strong>Ananmesis</strong><br>
+            <div class="form-group">
+              <div [innerHTML]="(actMedical$ | async)?.ananmesis" class="ananmesis"></div>
+            </div>
+
+          </div>
+        </div>
+
+      </app-card>
+    </div>
+  </div>
+
+  <hr>
+
+  <div class="row">
+    <div class="col-12">
+      <app-card cardClass="card-datatable" [options]="false" [customHeader]="true">
+
+        <div class="app-card-header">
+          <h5>Signos vitales</h5>
+
+          <div class="float-right">
+            <span class="badge badge-info">
+              {{ (actMedical$ | async)?.vitalSign?.resultOxygen }}
+            </span>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-3">
+
+            <strong>Saturación de oxigeno (0 al 100):</strong><br>
+            <div class="form-group">
+              <span>{{ (actMedical$ | async)?.vitalSign?.oxygenSaturation | number }}</span>
+            </div>
+
+          </div>
+
+          <div class="col-3">
+
+            <strong>Temperatura corporal (Cº):</strong><br>
+            <div class="form-group">
+              <span>{{ (actMedical$ | async)?.vitalSign?.bodyTemperature | number }}</span>
+            </div>
+
+          </div>
+
+          <div class="col-2">
+
+            <strong>Frecuencia cardiaca:</strong><br>
+            <div class="form-group">
+              <span>{{ (actMedical$ | async)?.vitalSign?.heartFrecuency | number }}</span>
+            </div>
+
+          </div>
+
+          <div class="col-2">
+
+            <strong>Presión arterial (mmHg):</strong><br>
+            <div class="form-group">
+              <span>{{ (actMedical$ | async)?.vitalSign?.bloodPressure }}</span>
+            </div>
+
+          </div>
+
+          <div class="col-2">
+
+            <strong>Frecuencia respiratoría:</strong><br>
+            <div class="form-group">
+              <span>{{ (actMedical$ | async)?.vitalSign?.breathingFrecuency | number }}</span>
+            </div>
+
+          </div>
+
+
+        </div>
+
+      </app-card>
+    </div>
+  </div>
+
+  <hr>
+
+  <div class="row">
+    <div class="col-12">
+      <app-card cardClass="card-datatable" [options]="false" [customHeader]="true">
+
+        <div class="app-card-header">
+          <h5>Antropometría</h5>
+
+          <div class="float-right">
+            <span class="badge badge-info">
+              {{ (actMedical$ | async)?.antrophometry?.resultIMC }}
+            </span>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-3">
+
+            <strong>Peso (Kg):</strong><br>
+            <div class="form-group">
+              <span>{{ (actMedical$ | async)?.antrophometry?.weight | number }}</span>
+            </div>
+
+          </div>
+
+          <div class="col-3">
+
+            <strong>Talla (mts):</strong><br>
+            <div class="form-group">
+              <span>{{ (actMedical$ | async)?.antrophometry?.height | number }}</span>
+            </div>
+
+          </div>
+
+          <div class="col-3">
+
+            <strong>I.M.C</strong><br>
+            <div class="form-group">
+              <span>{{ (actMedical$ | async)?.antrophometry?.bodyMassiveIndex | number }}</span>
+            </div>
+
+          </div>
+
+          <div class="col-3">
+
+            <strong>Perimetro abdominal:</strong><br>
+            <div class="form-group">
+              <span>{{ (actMedical$ | async)?.antrophometry?.abdominalPerimeter | number }}</span>
+            </div>
+
+          </div>
+
+
+        </div>
+
+        <div class="row">
+          <div class="col-6">
+            <strong>Examen clinico:</strong><br>
+            <div class="form-group">
+              <span>{{ (actMedical$ | async)?.antrophometry?.clinicalExamination }}</span>
+            </div>
+          </div>
+          <div class="col-6">
+            <strong>Perimetro abdominal:</strong><br>
+            <div class="form-group">
+              <span>{{ (actMedical$ | async)?.antrophometry?.expedient }}</span>
+            </div>
+          </div>
+        </div>
+
+      </app-card>
+    </div>
+  </div>
+
+  <hr>
+
+  <div class="row">
+    <div class="col-12">
+      <app-card cardClass="card-datatable" [options]="false" [customHeader]="true">
+
+        <div class="app-card-header">
+          <h5>Plan de trabajo</h5>
+        </div>
+
+        <div class="row">
+          <div class="col-6">
+            <strong>Plan de trabajo Observaciones y/o Comentarios:</strong><br>
+            <div class="form-group">
+              <span>{{ (actMedical$ | async)?.observationDiagnostic ? (actMedical$ | async)?.observationDiagnostic : "-"
+                }}</span>
+            </div>
+          </div>
+          <div class="col-6">
+            <strong>¿Es atención de control?</strong><br>
+            <div class="form-group">
+              <span>{{ (actMedical$ | async)?.answerControl == 'YES' ? 'Si' : 'No' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <hr>
+
+        <div class="row">
+          <div class="col-12">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th style="width: 35%">Diagnostico</th>
+                  <th style="width: 10%">Código</th>
+                  <th style="width: 20%">Tipo</th>
+                  <th>Observaciones</th>
+                </tr>
+              </thead>
+
+              <tbody>
+
+                <tr *ngFor="let item of (actMedical$ | async)?.diagnostics; let i = index;">
+
+                  <td>
+                    {{ item.diagnosticName }}
+                  </td>
+                  <td>
+                    {{ item.code }}
+                  </td>
+                  <td>
+                    {{ item.diagnosticType == 'PRESUNTIVO' ? "Presuntivo" : "Definitivo" }}
+                  </td>
+                  <td>
+                    {{ item.observation }}
+                  </td>
+                </tr>
+              </tbody>
+
+            </table>
+          </div>
+        </div>
+
+      </app-card>
+    </div>
+  </div>
+
+  <hr>
+
+  <div class="row">
+    <div class="col-12">
+      <app-card cardClass="card-datatable" [options]="false" [customHeader]="true">
+
+        <div class="app-card-header">
+          <h5>Receta médica</h5>
+        </div>
+
+        <div class="row">
+          <div class="col-12">
+            <table class="table table-bordered">
+
+              <thead>
+                <tr>
+                  <th>Receta</th>
+                  <th style="width: 20%">Indicaciones generales</th>
+                  <th style="width: 20%">Observaciones</th>
+                  <th style="width: 5%"></th>
+                </tr>
+              </thead>
+
+              <tbody>
+
+
+                <tr *ngFor="let item of (actMedical$ | async)?.prescriptions; let i = index;">
+
+                  <td>
+                    {{ item.title }}
+                  </td>
+                  <td>
+                    {{ item.indication }}
+                  </td>
+                  <td>
+                    {{ item.observation }}
+                  </td>
+                  <td class="text-center">
+
+                    <button class="btn btn-success btn-circle mr-2" type="button" (click)="printPrescription(item)">
+                      <i class="fa fa-print"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+
+            </table>
+          </div>
+        </div>
+
+      </app-card>
+    </div>
+  </div>
+
+</ng-container>
+
+<ng-template #isLoading>
+
+  <div class="row">
+    <div class="col-12">
+      <app-card cardClass="card-datatable" [options]="false" [customHeader]="true">
+        <div class="alert alert-warning">
+          <strong>Cargando atención...</strong>
+        </div>
+      </app-card>
+    </div>
+  </div>
+
+</ng-template>

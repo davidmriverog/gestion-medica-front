@@ -1,0 +1,110 @@
+<div class="row">
+
+  <div class="col-12">
+
+    <div class="row justify-content-end mb-4">
+      <div class="col">
+        <button type="button" class="btn btn-xs btn-success ml-1 float-right" (click)="createModal()">
+          Nuevo Tipo de producto
+        </button>
+      </div>
+    </div>
+
+    <app-card [hidHeader]="false" cardClass="card-datatable" customHeader="true">
+
+      <div class="app-card-header">
+        <h5>Listado de tipo de productos</h5>
+        <div class="card-header-right">
+
+          <button type="button" class="btn btn-xs btn-warning ml-1" (click)="adminTable.refreshing()">
+            <span><i class="fa fa-redo"></i> Refrescar</span>
+          </button>
+
+          <button type="button" class="btn btn-xs btn-primary ml-1" (click)="adminTable.clearFilters()">
+            <span><i class="fa fa-eraser"></i> Limpiar</span>
+          </button>
+
+          <button type="button" class="btn btn-xs btn-danger ml-1" (click)="adminTable.openFilter()">
+            <span><i class="fa fa-filter"></i> Filtros</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="dt-responsive">
+
+        <ui-admin-table #adminTable (refresh)="onRefresh($event)" [apiRecords]="(records$ | async)" [pageSize]="15">
+          <ng-template #contentFiltered>
+            <div class="row">
+              <div class="col-12">
+                <ui-text-filter label="Moneda" property="name" mode="like">
+                </ui-text-filter>
+              </div>
+            </div>
+          </ng-template>
+
+          <p-table>
+            <ng-template pTemplate="header">
+              <tr>
+                <th scope="col">
+                  Tipo
+                </th>
+                <th scope="col" style="width: 10%">
+                  Código
+                </th>
+                <th scope="col" style="width: 15%">
+                  Fecha de creación
+                </th>
+                <th scope="col" style="width: 10%">
+                  Estado
+                </th>
+                <th scope="col" style="width: 15%" class="text-center">
+                  Acciones
+                </th>
+              </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-row>
+              <tr [pContextMenuRow]="row" [pSelectableRow]="row">
+                <td>
+                  {{ row.name }}
+                </td>
+                <td>
+                  <span class="badge badge-success">
+                    {{ row.code }}
+                  </span>
+                </td>
+                <td>
+                  {{ row.createdAt | date: 'dd-MM-yyyy HH:mm' }}
+                </td>
+                <td>
+                  <ng-container *ngIf="!row.deleted else inactiveElse">
+                    <span class="badge badge-light-success">Activo</span>
+                  </ng-container>
+
+                  <ng-template #inactiveElse>
+                    <span class="badge badge-light-danger">Inactivo</span>
+                  </ng-template>
+                </td>
+                <td class="text-center">
+                  <button type="button" class="btn btn-sm btn-success mr-2" (click)="editModal(row)">
+                    <i class="feather icon-edit"></i>
+                  </button>
+                </td>
+              </tr>
+            </ng-template>
+
+            <ng-template pTemplate="emptymessage" let-columns>
+              <tr>
+                <td [attr.colspan]="5">
+                  No records found
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+
+        </ui-admin-table>
+
+      </div>
+    </app-card>
+  </div>
+</div>

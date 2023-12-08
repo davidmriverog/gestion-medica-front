@@ -1,0 +1,177 @@
+<div class="user-profile user-card mb-4">
+  <div class="card-header border-0 p-0 pb-0">
+    <div class="cover-img-block">
+
+      <div class="overlay"></div>
+      <div class="change-cover">
+
+      </div>
+    </div>
+  </div>
+  <div class="card-body py-0">
+    <div class="user-about-block m-0">
+      <div class="row">
+        <div class="col-md-4 text-center mt-n5">
+
+        </div>
+        <div class="col-md-8 mt-md-4">
+          <div class="row">
+            <div class="col-12 text-right">
+              <button type="button" class="btn btn-success" (click)="submit($event)">Actualizar datos</button>
+            </div>
+          </div>
+          <ul class="nav nav-tabs profile-tabs nav-fill" id="myTab" role="tablist">
+
+            <li class="nav-item">
+              <a class="nav-link text-reset" [ngClass]="{'active': this.activeTab === 'personal-data'}"
+                (click)="this.activeTab = 'personal-data'" id="profile-tab" data-toggle="tab" href="javascript:;"
+                role="tab" aria-selected="false"><i class="feather icon-user mr-2"></i>Datos generales</a>
+            </li>
+
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="tab-content" id="myTabContent" [formGroup]="formGroup">
+
+  <input type="hidden" [formControlName]="modelIdPropertyName" />
+  <input type="hidden" formControlName="createdAt" />
+  <input type="hidden" formControlName="active" />
+
+  <div class="tab-pane fade" [ngClass]="{'show active': this.activeTab === 'personal-data'}" id="personal-data"
+    role="tabpanel" aria-labelledby="profile-tab">
+
+    <div class="row">
+      <div class="col-md-4">
+        <app-card [hidHeader]="true" blockClass="border-top pro-det-edit collapse show">
+          <div class="row">
+            <div class="col-12">
+              <div class="form-group">
+                <ui-label [group]="formGroup" name="logoImg" text="Insertar logo cuadrado 50x50 píxeles"
+                  message="Logo de la clínica o de su línea de negocio"></ui-label>
+                <ui-file-box [group]="formGroup" formControlName="logoImg">
+                </ui-file-box>
+              </div>
+            </div>
+          </div>
+        </app-card>
+      </div>
+      <div class="col-md-8">
+        <app-card [hidHeader]="true" blockClass="border-top pro-det-edit collapse show">
+          <div class="row">
+            <div class="col-12">
+              <div class="form-group">
+                <ui-label [group]="formGroup" name="businessName" text="Razón social"
+                  message="Nombre fiscal o comercial de su clínica o lugar comercial"></ui-label>
+                <ui-text-box [group]="formGroup" formControlName="businessName"></ui-text-box>
+                <ui-validators [group]="formGroup" name="businessName"></ui-validators>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 col-sm-12">
+              <div class="form-group">
+                <ui-label [group]="formGroup" name="businessNumber" text="Nro. de documento"
+                  message="Nro de documemnto fiscal, RUC, CUIT, RIF y entre otros."></ui-label>
+                <ui-text-box [group]="formGroup" formControlName="businessNumber"></ui-text-box>
+                <ui-validators [group]="formGroup" name="businessNumber"></ui-validators>
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-12">
+              <div class="form-group">
+                <ui-label [group]="formGroup" name="legalRepresentative" text="Representante Legal"
+                  message="Nombre del represante legal o dueño."></ui-label>
+                <ui-text-box [group]="formGroup" formControlName="legalRepresentative"></ui-text-box>
+                <ui-validators [group]="formGroup" name="legalRepresentative"></ui-validators>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 col-sm-12">
+              <div class="form-group">
+                <ui-label [group]="formGroup" name="countryName" text="País" message="País de operación"></ui-label>
+                <ui-text-box [group]="formGroup" formControlName="countryName"></ui-text-box>
+                <ui-validators [group]="formGroup" name="countryName"></ui-validators>
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-12">
+              <div class="form-group">
+                <ui-label [group]="formGroup" name="currencyId" text="Moneda" message="Moneda de operación"></ui-label>
+                <ui-dropdown [group]="formGroup" formControlName="currencyId" bindLabel="name" bindValue="_id"
+                  [items]="(currencies$ | async)">
+                </ui-dropdown>
+                <ui-validators [group]="formGroup" name="currencyId"></ui-validators>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 col-sm-12">
+              <div class="form-group">
+                <ui-label [group]="formGroup" name="taxeName" text="Impuesto"
+                  message="Nombre del impuesto nacional según el país."></ui-label>
+                <ui-text-box [group]="formGroup" formControlName="taxeName"></ui-text-box>
+                <ui-validators [group]="formGroup" name="taxeName"></ui-validators>
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-12">
+              <div class="form-group">
+                <ui-label [group]="formGroup" name="taxeValue" text="(%) Impuesto"
+                  message="Porcentaje del impuesto según el país"></ui-label>
+                <ui-number-box [group]="formGroup" formControlName="taxeValue"></ui-number-box>
+                <ui-validators [group]="formGroup" name="taxeValue"></ui-validators>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12 col-sm-12">
+              <div class="form-group">
+                <ui-label [group]="formGroup" name="email" text="Correo electrónico"
+                  message="Correo electrónico del negocio o centro de salud."></ui-label>
+                <ui-text-box [group]="formGroup" formControlName="email"></ui-text-box>
+                <ui-validators [group]="formGroup" name="email"></ui-validators>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 col-sm-12">
+              <div class="form-group">
+                <ui-label [group]="formGroup" name="phoneOne" text="Teléfono 1"
+                  message="Teléfono de contacto de la clinica"></ui-label>
+                <ui-text-box [group]="formGroup" formControlName="phoneOne"></ui-text-box>
+                <ui-validators [group]="formGroup" name="phoneOne"></ui-validators>
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-12">
+              <div class="form-group">
+                <ui-label [group]="formGroup" name="phoneTwo" text="Teléfono 2" message="Teléfono opcional"></ui-label>
+                <ui-text-box [group]="formGroup" formControlName="phoneTwo"></ui-text-box>
+                <ui-validators [group]="formGroup" name="phoneTwo"></ui-validators>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-12">
+              <div class="form-group">
+                <ui-label [group]="formGroup" name="address" text="Dirección fiscal"
+                  message="Dirección fiscal del negocio"></ui-label>
+                <ui-text-area [group]="formGroup" formControlName="address" [rows]="5"></ui-text-area>
+                <ui-validators [group]="formGroup" name="address"></ui-validators>
+              </div>
+            </div>
+          </div>
+        </app-card>
+      </div>
+    </div>
+
+  </div>
+
+</div>

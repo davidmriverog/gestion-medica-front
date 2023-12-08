@@ -1,0 +1,53 @@
+<ui-modal-form title="Producto | Formulario" [buttonClose]="true" [buttonSubmit]="true" [formGroup]="formGroup"
+  (formSubmit)="submit($event)">
+
+  <input type="hidden" [formControlName]="modelIdPropertyName" />
+  <input type="hidden" formControlName="createdAt" />
+
+  <div class="row">
+    <div class="col-12">
+      <ui-label [group]="formGroup" name="name" text="Producto" message="Nombre del producto"></ui-label>
+      <div class="form-group">
+        <ui-text-box [group]="formGroup" formControlName="name"></ui-text-box>
+        <ui-validators [group]="formGroup" name="name"></ui-validators>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <ui-label [group]="formGroup" name="specialityId" text="Especialidad" message="Especialidad del producto">
+      </ui-label>
+      <div class="form-group">
+        <ui-dropdown [group]="formGroup" formControlName="specialityId" bindLabel="name" bindValue="_id"
+          [items]="(specialities$ | async)">
+        </ui-dropdown>
+        <ui-validators [group]="formGroup" name="specialityId"></ui-validators>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <ui-label [group]="formGroup" name="productCategoryId" text="Tipo de producto" message="Tipo del producto">
+      </ui-label>
+      <div class="form-group">
+        <ui-dropdown [group]="formGroup" formControlName="productCategoryId" bindLabel="name" bindValue="_id"
+          [items]="(productCategories$ | async)">
+        </ui-dropdown>
+        <ui-validators [group]="formGroup" name="productCategoryId"></ui-validators>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <ui-label [group]="formGroup" name="price" text="Precio" message="Monto o costo del producto"></ui-label>
+      <div class="form-group">
+        <ui-currency-box [group]="formGroup" formControlName="price" decimal="2"></ui-currency-box>
+        <ui-validators [group]="formGroup" name="price"></ui-validators>
+      </div>
+    </div>
+  </div>
+
+</ui-modal-form>

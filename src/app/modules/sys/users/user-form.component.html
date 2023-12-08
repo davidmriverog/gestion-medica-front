@@ -1,0 +1,105 @@
+<ui-modal-form title="Formulario de usuario" [buttonClose]="true" [buttonSubmit]="true" [formGroup]="formGroup"
+  (formSubmit)="submit($event)" #modalForm>
+
+  <input type="hidden" [formControlName]="modelIdPropertyName" />
+  <input type="hidden" formControlName="createdAt" />
+
+  <input type="hidden" formControlName="password" />
+  <input type="hidden" formControlName="doctorId" />
+  <input type="hidden" formControlName="patientId" />
+  <input type="hidden" formControlName="staffId" />
+
+  <div class="row">
+    <div class="col-sm-12" [ngClass]="{'col-md-3': hiddenPassword === false, 'col-md-6': hiddenPassword === true}">
+      <div class="form-group">
+        <ui-label [group]="formGroup" name="username" text="Usuario"
+          message="Nombre del usuario, requiere que sea único">
+        </ui-label>
+        <ui-text-box [group]="formGroup" formControlName="username"></ui-text-box>
+        <ui-validators [group]="formGroup" name="username"></ui-validators>
+      </div>
+    </div>
+
+    <div class="col-sm-12" [ngClass]="{'col-md-3': hiddenPassword === false, 'col-md-6': hiddenPassword === true}">
+      <div class="form-group">
+        <ui-label [group]="formGroup" name="email" text="Correo electrónico" message="Correo electrónico de contacto">
+        </ui-label>
+        <ui-text-box [group]="formGroup" formControlName="email"></ui-text-box>
+        <ui-validators [group]="formGroup" name="email"></ui-validators>
+      </div>
+    </div>
+
+    <ng-container *ngIf="hiddenPassword === false">
+      <div class="col-md-3 col-sm-12">
+        <div class="form-group">
+          <ui-label [group]="formGroup" name="password" text="Contraseña" message="Clave de acceso">
+          </ui-label>
+          <ui-password-box [group]="formGroup" formControlName="password"></ui-password-box>
+          <ui-validators [group]="formGroup" name="password"></ui-validators>
+        </div>
+      </div>
+
+      <div class="col-md-3 col-sm-12">
+        <div class="form-group">
+          <ui-label [group]="formGroup" name="confirmPassword" text="Repita su clave" message="Clave de acceso">
+          </ui-label>
+          <ui-password-box [group]="formGroup" formControlName="confirmPassword"></ui-password-box>
+          <ui-validators [group]="formGroup" name="confirmPassword"></ui-validators>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+
+
+  <div class="row" *ngIf="hiddenPassword === false">
+    <div class="col-md-4 col-sm-12">
+      <div class="form-group">
+        <ui-label name="roleId" text="Rol"></ui-label>
+        <ui-dropdown formControlName="roleId" bindLabel="name" bindValue="_id" (change)="selectRole($event)"
+          [items]="(roles$ | async)">
+        </ui-dropdown>
+        <ui-validators name="roleId"></ui-validators>
+      </div>
+    </div>
+
+    <ng-container *ngIf="roleSelected && roleSelected == roleEnum.Medical">
+      <div class="col-md-8 col-sm-12">
+        <ui-label [group]="formGroup" name="doctorId" text="Médico / Profesional" message="Médico a vincular">
+        </ui-label>
+        <ui-doctor-box [group]="formGroup" formControlName="doctorId"></ui-doctor-box>
+        <ui-validators [group]="formGroup" name="doctorId"></ui-validators>
+      </div>
+    </ng-container>
+
+    <ng-container
+      *ngIf="roleSelected && (roleSelected == roleEnum.RootAdmin || roleSelected == roleEnum.Admin || roleSelected == roleEnum.Receptionist)">
+      <div class="col-md-8 col-sm-12">
+        <ui-label [group]="formGroup" name="staffId" text="Personal" message="Personal a vincular">
+        </ui-label>
+        <ui-staff-box [group]="formGroup" formControlName="staffId"></ui-staff-box>
+        <ui-validators [group]="formGroup" name="staffId"></ui-validators>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="roleSelected && (roleSelected == roleEnum.Patient)">
+      <div class="col-md-8 col-sm-12">
+        <ui-label [group]="formGroup" name="patientId" text="Paciente" message="Paciente a vincular">
+        </ui-label>
+        <ui-patient-box [group]="formGroup" formControlName="patientId"></ui-patient-box>
+        <ui-validators [group]="formGroup" name="patientId"></ui-validators>
+      </div>
+    </ng-container>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <div class="form-group">
+        <div style="padding-top: 35px;">
+          <ui-check-box [group]="formGroup" formControlName="active" label="Activo"></ui-check-box>
+        </div>
+        <ui-validators [group]="formGroup" name="active"></ui-validators>
+      </div>
+    </div>
+  </div>
+
+</ui-modal-form>

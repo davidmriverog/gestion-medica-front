@@ -1,0 +1,22 @@
+@import "~src/scss/style";
+
+.card-calendar {
+
+    @extend .card-datatable;
+
+    .card-body {
+        padding: 15px 15px !important;
+    }
+}
+
+.ui-tabview.ui-tabview-top .ui-tabview-nav li, body .ui-tabview.ui-tabview-bottom .ui-tabview-nav li, body .ui-tabview.ui-tabview-left .ui-tabview-nav li, body .ui-tabview.ui-tabview-right .ui-tabview-nav li {
+    border-top-left-radius: 20px !important;
+}
+
+.ui-tabview .ui-tabview-panels {
+    padding: 0;
+}
+
+.ui-datepicker table td {
+    padding: 0.2em !important;
+}

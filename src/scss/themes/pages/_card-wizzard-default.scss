@@ -1,0 +1,22 @@
+.container-wizzard-default {
+
+    @extend .container;
+
+    margin-top: 30px;
+
+}
+
+.card-wizzard-form {
+
+    @extend .card;
+
+    max-width: 100%;
+    min-height: 600px;
+
+    .card-body {
+
+        .card-title {
+            text-align: center;
+        }
+    }
+}

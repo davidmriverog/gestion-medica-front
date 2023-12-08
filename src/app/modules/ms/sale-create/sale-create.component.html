@@ -1,0 +1,213 @@
+<div class="row" [formGroup]="formGroup">
+
+  <input type="hidden" [formControlName]="modelIdPropertyName" />
+  <input type="hidden" formControlName="createdAt" />
+
+  <div class="col-md-12 col-sm-12">
+
+    <app-card cardClass="card-calendar" [options]="false" [customHeader]="true">
+
+      <div class="app-card-header">
+        <div class="card-header-right">
+          <button type="button" class="btn btn-xs btn-warning mr-2" (click)="submit($event)" placement="top"
+            ngbTooltip="Registramos nueva venta">
+            <span><i class="fa fa-save"></i> Emitir reserva [F2]</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12 col-sm-12">
+          <ui-label [group]="formGroup" name="patientId" text="Cliente" message="Paciente a vender y/o reservar">
+          </ui-label>
+
+          <div class="form-group">
+            <ui-patient-box [group]="formGroup" formControlName="patientId"></ui-patient-box>
+            <ui-validators [group]="formGroup" name="patientId"></ui-validators>
+          </div>
+
+        </div>
+      </div>
+
+    </app-card>
+
+  </div>
+
+  <div class="col-md-12 col-sm-12">
+    <app-card cardClass="card-calendar" [options]="false" [customHeader]="true">
+      <div class="app-card-header">
+        <div class="card-header-right">
+          <button type="button" class="btn btn-xs btn-primary" placement="top" ngbTooltip="Cargar cupo(s) disponibles"
+            (click)="loanCoupons()">
+            <span><i class="fa fa-user-md"></i> Buscar cupo</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12 pt-5">
+
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th width="30%">Cupo</th>
+                <th width="20%">Paciente</th>
+                <th>Medico / Profesional</th>
+                <th width="15%">Costo</th>
+                <th width="10%">Acciones</th>
+              </tr>
+            </thead>
+
+            <tbody formArrayName="items">
+              <tr *ngIf="formGroup.get('items')['controls'].length == 0">
+                <td colspan="5" style="width: 100%;">
+                  <div class="text text-center">
+                    <span
+                      [ngClass]="{'invalid-feedback force-invalid-feedback': formGroup.get('items').invalid && (formGroup.touched && formGroup.get('items').dirty || formGroup.get('items').touched)}">
+                      Por favor carga un cupo</span>
+                  </div>
+                </td>
+              </tr>
+
+              <tr *ngFor="let item of formGroup.get('items')['controls']; let i = index;" [formGroupName]="i">
+
+                <td>
+                  Especialidad: <span class="badge badge-success">{{ item.value.specialityName }}</span> <br>
+                  Producto: <strong>{{ item.value.productName }}</strong> <br>
+                  Fecha atención: <strong>{{ item.value.attentionDate | utcDate: "dd-MM-yyyy" }}</strong> <br>
+                  Consultorio: <span class="badge badge-primary"> {{ item.value.medicalOfficeName }}</span> <br>
+                  Intervalo: <strong>{{ item.value.title }}</strong>
+                </td>
+                <td>
+                  <span class="badge badge-info">
+                    {{ item.value.patientName }}
+                  </span>
+                </td>
+                <td>
+                  <span class="badge badge-success">
+                    {{ item.value.doctorName }}
+                  </span>
+                </td>
+                <td>
+                  <span class="badge badge-primary">
+                    {{ (currency$ | async)?.symbol }} {{ item.value.amount | number:"1.1-2" }}
+                  </span>
+                </td>
+
+                <td class="text-center">
+                  <button class="btn btn-sm btn-danger btn-icon btn-circle" type="button"
+                    (click)="removeItem(item.value, i)">
+                    <i class="fa fa-trash"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </app-card>
+  </div>
+
+  <div class="col-md-12 col-sm-12">
+    <div class="row">
+
+      <div class="col-md-9">
+        <app-card cardClass="card-datatable" [options]="false" [customHeader]="true">
+
+          <div class="row">
+            <div class="col-md-6 col-sm-12">
+              <ui-label [group]="formGroup" name="taxConditionId" text="Condición impositiva"
+                message="Condición impositiva de la venta asociada a la reserva"></ui-label>
+              <div class="form-group">
+                <ui-dropdown [group]="formGroup" formControlName="taxConditionId" bindLabel="name" bindValue="_id"
+                  [items]="(taxConditions$ | async)">
+                </ui-dropdown>
+                <ui-validators [group]="formGroup" name="taxConditionId"></ui-validators>
+              </div>
+            </div>
+
+            <div class="col-md-6 col-sm-12">
+              <ui-label [group]="formGroup" name="paymentConditionId" text="Forma de pago"
+                message="Forma de pago de la reserva"></ui-label>
+              <div class="form-group">
+                <ui-dropdown [group]="formGroup" formControlName="paymentConditionId" bindLabel="name" bindValue="_id"
+                  (change)="onComissionChange($event)"
+                  [items]="(paymentConditions$ | async)">
+                </ui-dropdown>
+                <ui-validators [group]="formGroup" name="paymentConditionId"></ui-validators>
+              </div>
+            </div>
+
+          </div>
+
+        </app-card>
+      </div>
+
+      <div class="col-md-3">
+        <app-card cardClass="card-datatable" [options]="false" [customHeader]="true">
+
+          <div class="row">
+            <div class="col-12">
+              <div class="text-right">
+                <strong>Subtotal</strong>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="text-right">
+                <strong class="font-20">{{ (currency$ | async)?.symbol }} {{ formGroup.get('subtotal').value
+                  | number:"1.1-2" }}</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="row" *ngIf="formGroup.get('percCommission').value > 0">
+            <div class="col-12">
+              <div class="text-right">
+                <strong>Comisión %</strong>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="text-right">
+                <span class="badge badge-success font-20" *ngIf="formGroup.get('percCommission').value > 0">
+                  {{ formGroup.get('percCommission').value | number:"1.1-2" }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-12">
+              <div class="text-right">
+                <strong>Comisión</strong>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="text-right">
+                <strong class="font-20">{{ (currency$ | async)?.symbol }} {{
+                  formGroup.get('commission').value | number:"1.1-2" }}</strong>
+              </div>
+            </div>
+          </div>
+
+          <hr>
+
+          <div class="row">
+            <div class="col-12">
+              <div class="text-right">
+                <strong>Monto total</strong>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="text-right">
+                <span class="badge badge-success" style="font-size:  1.3rem;"> {{ (currency$ | async)?.symbol }} {{
+                  formGroup.get('netAmount').value | number:"1.1-2" }}</span>
+              </div>
+            </div>
+          </div>
+
+        </app-card>
+      </div>
+    </div>
+  </div>
+</div>

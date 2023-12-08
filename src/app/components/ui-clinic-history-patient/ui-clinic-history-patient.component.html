@@ -1,0 +1,74 @@
+<div class="row">
+  <div class="col-12">
+
+    <app-card cardClass="card-datatable" [options]="false" [customHeader]="true">
+
+      <div class="app-card-header">
+        <div class="card-header-right">
+          <button type="button" class="btn btn-xs btn-danger">
+            <span><i class="fa fa-reload"></i> Refrescar</span>
+          </button>
+        </div>
+      </div>
+
+
+      <div class="row">
+        <div class="col-md-6 col-sm-12">
+          <strong>Apellido(s) y nombre(s)</strong><br>
+          <span>
+            {{ ( patient$ | async)?.firstName }}
+            {{ (patient$ | async)?.firstSurname }}
+          </span>
+        </div>
+
+        <div class="col-md-2 col-sm-6">
+          <strong>Género</strong><br>
+          <span>
+            {{ (patient$ | async)?.gender == "M" ? "Masculino" : "Femenino" }}
+          </span>
+        </div>
+
+        <div class="col-md-2 col-sm-6">
+          <strong>Nro. historia</strong><br>
+          <span class="badge badge-success">
+            {{ (patient$ | async)?.historyNumber }}
+          </span>
+        </div>
+
+        <div class="col-md-2 col-sm-6">
+          <strong>Edad</strong><br>
+          <span>
+            {{ showAge((patient$ | async)?.birthDate) }}
+          </span>
+        </div>
+
+      </div>
+
+      <div class="row mt-1">
+        <div class="col-md-6 col-sm-12">
+          <strong>Dirección</strong><br>
+          <span>
+            {{ ( patient$ | async)?.addresses }}
+          </span>
+        </div>
+
+        <div class="col-md-2 col-sm-6">
+          <strong>Nro. Télf:</strong><br>
+          <span>
+            {{ (patient$ | async)?.cellphone }}
+          </span>
+        </div>
+
+        <div class="col-md-2 col-sm-6">
+          <strong>Correo electrónico</strong><br>
+          <span class="badge badge-info">
+            {{ (patient$ | async)?.emailAddress }}
+          </span>
+        </div>
+
+      </div>
+
+    </app-card>
+
+  </div>
+</div>

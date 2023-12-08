@@ -1,0 +1,577 @@
+<div class="container-fluid" [formGroup]="formGroup">
+
+  <input type="hidden" [formControlName]="modelIdPropertyName" />
+  <input type="hidden" formControlName="medicalReport" />
+  <input type="hidden" formControlName="type" />
+  <input type="hidden" formControlName="createdAt" />
+  <input type="hidden" formControlName="saleDetailId" />
+  <input type="hidden" formControlName="active" />
+
+  <div class="row">
+    <div class="col-12">
+
+      <div class="card-patient">
+        <div class="card-body">
+          <p-tabView>
+
+            <p-tabPanel>
+              <ng-template pTemplate="header">
+                <i class="fa fa-user"></i>
+                <span class="ml-2">Datos del paciente</span>
+              </ng-template>
+
+              <div class="row" *ngIf="( detailInfo$ | async) == null">
+                <div class="col-12">
+                  <div class="alert alert-warning">
+                    <strong>Cargando...</strong>
+                  </div>
+                </div>
+              </div>
+
+
+
+              <div class="row" *ngIf="( detailInfo$ | async) != null">
+                <div class="col-md-6 col-sm-12">
+                  <strong>Apellido(s) y nombre(s)</strong><br>
+                  <span>
+                    {{ ( detailInfo$ | async)?.patient?.firstName }}
+                    {{ ( detailInfo$ | async)?.patient?.firstSurname }}
+                  </span>
+                </div>
+
+                <div class="col-md-2 col-sm-6">
+                  <strong>Género</strong><br>
+                  <span>
+                    {{ ( detailInfo$ | async)?.patient?.gender == "M" ? "Masculino" : "Femenino" }}
+                  </span>
+                </div>
+
+                <div class="col-md-2 col-sm-6">
+                  <strong>Nro. historia</strong><br>
+                  <span class="badge badge-success">
+                    {{ ( detailInfo$ | async)?.patient?.historyNumber }}
+                  </span>
+                </div>
+
+                <div class="col-md-2 col-sm-6">
+                  <strong>Edad</strong><br>
+                  <span>
+                    {{ showAge(( detailInfo$ | async)?.patient?.birthDate) }}
+                  </span>
+                </div>
+              </div>
+            </p-tabPanel>
+
+            <p-tabPanel>
+              <ng-template pTemplate="header">
+                <i class="fa fa-user-md"></i>
+                <span class="ml-2">Historial Méd</span>
+              </ng-template>
+
+
+              <app-card cardClass="card-datatable" [options]="false" [customHeader]="true">
+
+                <div class="app-card-header">
+                  <h5>Enfermedades y/o alergías</h5>
+
+                  <div class="card-header-right">
+                    <button type="button" class="btn btn-xs btn-primary" (click)="newAffectionPatient()">
+                      <span><i class="fa fa-plus"></i> Añadir</span>
+                    </button>
+                  </div>
+                </div>
+
+
+                <div class="dt-responsive">
+                  <ui-admin-table #adminTable (refresh)="onRefresh($event)" [apiRecords]="(records$ | async)"
+                    [pageSize]="15">
+                    <ng-template #contentFiltered>
+
+                    </ng-template>
+
+                    <p-table>
+                      <ng-template pTemplate="header">
+                        <tr>
+                          <th scope="col">Nombre</th>
+                          <th scope="col">Descripción</th>
+                          <th scope="col" style="width: 15%" class="text-center">
+                            Acciones
+                          </th>
+                        </tr>
+                      </ng-template>
+
+                      <ng-template pTemplate="body" let-row>
+                        <tr [pContextMenuRow]="row" [pSelectableRow]="row">
+                          <td>
+                            <span class="badge badge-primary">
+                              {{ row.name }}
+                            </span>
+                          </td>
+                          <td>{{ row.description }}</td>
+                          <td class="text-center">
+                            <button type="button" class="btn btn-sm btn-icon btn-success"
+                              (click)="editAffectionPatient(row)" ngbPopover="Editar"
+                              triggers="mouseenter:mouseleave"><i class="feather icon-check-circle"></i></button>
+                          </td>
+                        </tr>
+                      </ng-template>
+
+                      <ng-template pTemplate="emptymessage" let-columns>
+                        <tr>
+                          <td [attr.colspan]="3">
+                            No records found
+                          </td>
+                        </tr>
+                      </ng-template>
+                    </p-table>
+                  </ui-admin-table>
+                </div>
+
+              </app-card>
+
+
+            </p-tabPanel>
+
+          </p-tabView>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <hr>
+
+  <div class="row">
+
+    <div class="col-md-12 col-sm-12">
+      <app-card cardClass="card-datatable" [options]="false" [customHeader]="true">
+
+        <div class="row align-items-center mb-3">
+          <div class="col-2">
+
+          </div>
+          <div class="col-8">
+            <div class="text-center">
+              <h2 class="title-step">{{ stepMessage }}</h2>
+            </div>
+          </div>
+          <div class="col-2">
+
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-12">
+            <ng-wizard [config]="config" (stepChanged)="stepChanged($event)">
+
+              <ng-wizard-step description="1">
+                <div class="row">
+                  <div class="col-md-12 col-sm-12">
+                    <div class="form-group">
+                      <ui-label [group]="formGroup" name="ananmesis" text="Anamnesis:"
+                        message="Breve conversación con el paciente"></ui-label>
+                      <ui-editor-box [group]="formGroup" formControlName="ananmesis"></ui-editor-box>
+                      <ui-validators [group]="formGroup" name="ananmesis"></ui-validators>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-3 col-sm-12">
+                    <div class="form-group">
+                      <ui-check-box [group]="formGroup" formControlName="isPregnant" label="Está embarazada">
+                      </ui-check-box>
+                      <ui-validators [group]="formGroup" name="isPregnant"></ui-validators>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row" formGroupName="pregnant">
+
+                  <div class="col-md-4 col-sm-12">
+                    <div class="form-group">
+                      <ui-label name="lastRuleDate" text="Último período menstrual"
+                        message="Si está embarazada, cúal fue última fecha de periodo menstrual">
+                      </ui-label>
+                      <ui-form-date formControlName="lastRuleDate"></ui-form-date>
+                    </div>
+                  </div>
+
+                  <div class="col-md-4 col-sm-12">
+                    <div class="form-group">
+                      <ui-label name="weekNumber" text="Nro. de semana(s)"
+                        message="número de semana según la última fecha de menstruación"></ui-label>
+                      <ui-number-box formControlName="weekNumber"></ui-number-box>
+                    </div>
+                  </div>
+
+                  <div class="col-md-4 col-sm-12">
+                    <div class="form-group">
+                      <ui-label name="possibleDateOfBirth" text="Fecha estimada de parto" message="Fecha de parto">
+                      </ui-label>
+                      <ui-form-date formControlName="possibleDateOfBirth"></ui-form-date>
+                    </div>
+                  </div>
+
+                </div>
+
+
+              </ng-wizard-step>
+
+              <ng-wizard-step description="2">
+                <div class="row">
+                  <div class="col-md-12 col-sm-12">
+                    <div class="box-attention-medical" formGroupName="vitalSign">
+
+                      <div class="box-attention-header">
+
+                        <span class="box-attention-title">
+                          Signos vitales
+
+                          <div class="float-right">
+                            <span *ngIf="classOxigeno != null && classOxigeno != ''" [class]="classOxigeno">
+                              {{ formGroup.get('vitalSign.resultOxygen').value }}
+                            </span>
+                          </div>
+                        </span>
+                      </div>
+
+                      <div class="box-attention-body">
+
+                        <div class="row">
+
+                          <div class="col-md-4 com-sm-12">
+                            <div class="form-group">
+                              <ui-label name="oxygenSaturation" text="Saturación de oxigeno (0 al 100)"
+                                message="Saturación de oxigeno">
+                              </ui-label>
+                              <ui-number-box formControlName="oxygenSaturation"></ui-number-box>
+                              <ui-validators name="oxygenSaturation"></ui-validators>
+                            </div>
+                          </div>
+
+                          <div class="col-md-4 com-sm-12">
+                            <div class="form-group">
+                              <ui-label name="bodyTemperature" text="Temperatura corporal (Cº)"
+                                message="Temperatura corporal">
+                              </ui-label>
+                              <ui-number-box formControlName="bodyTemperature"></ui-number-box>
+                              <ui-validators name="bodyTemperature"></ui-validators>
+                            </div>
+                          </div>
+
+                          <div class="col-md-4 com-sm-12">
+                            <div class="form-group">
+                              <ui-label name="heartFrecuency" text="Frecuencia cardiaca" message="Frecuencia cardiaca">
+                              </ui-label>
+                              <ui-number-box formControlName="heartFrecuency"></ui-number-box>
+                              <ui-validators name="heartFrecuency"></ui-validators>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="row">
+                          <div class="col-md-6 col-sm-12">
+                            <div class="form-group">
+                              <ui-label name="bloodPressure" text="Presión arterial (mmHg)" message="Presión arterial">
+                              </ui-label>
+                              <ui-form-mask formControlName="bloodPressure" masked="000-000" placeholder="000-000">
+                              </ui-form-mask>
+                              <ui-validators name="bloodPressure"></ui-validators>
+                            </div>
+                          </div>
+
+                          <div class="col-md-6 col-sm-12">
+                            <div class="form-group">
+                              <ui-label name="breathingFrecuency" message="Frecuencia respiratorio por min."
+                                text="Frecuencia respiratoría (Por minuto)">
+                              </ui-label>
+                              <ui-number-box formControlName="breathingFrecuency"></ui-number-box>
+                              <ui-validators name="breathingFrecuency"></ui-validators>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+
+                <hr>
+
+                <div class="box-attention-medical" formGroupName="antrophometry">
+
+                  <div class="box-attention-header">
+
+                    <span class="box-attention-title">
+                      Antropometría
+                    </span>
+
+                    <div class="float-right">
+                      <span *ngIf="classIMC != null && classIMC != ''" [class]="classIMC">
+                        {{ formGroup.get('antrophometry.resultIMC').value }}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="box-attention-body">
+
+                    <div class="row">
+
+                      <div class="col-3">
+                        <div class="form-group">
+                          <ui-label name="weight" text="Peso (Kg)"></ui-label>
+                          <ui-number-box formControlName="weight"></ui-number-box>
+                          <ui-validators name="weight"></ui-validators>
+                        </div>
+                      </div>
+
+                      <div class="col-3">
+                        <div class="form-group">
+                          <ui-label name="height" text="Talla (cm)"></ui-label>
+                          <ui-number-box formControlName="height"></ui-number-box>
+                          <ui-validators name="height"></ui-validators>
+                        </div>
+                      </div>
+
+                      <div class="col-3">
+                        <div class="form-group">
+                          <ui-label name="bodyMassiveIndex" text="I.M.C" message="Indice de masa corporal"></ui-label>
+                          <ui-number-box formControlName="bodyMassiveIndex"></ui-number-box>
+                          <ui-validators name="bodyMassiveIndex"></ui-validators>
+                        </div>
+                      </div>
+
+                      <div class="col-3">
+                        <div class="form-group">
+                          <ui-label name="abdominalPerimeter" text="Perimetro abdominal"></ui-label>
+                          <ui-number-box formControlName="abdominalPerimeter"></ui-number-box>
+                          <ui-validators name="abdominalPerimeter"></ui-validators>
+                        </div>
+                      </div>
+
+                    </div>
+
+                    <div class="row">
+                      <div class="col-6">
+                        <div class="form-group">
+                          <ui-label name="clinicalExamination" text="Examen clinico"
+                            message="Breve comentario sobre la examinación al paciente"></ui-label>
+                          <ui-text-area formControlName="clinicalExamination" [rows]="3">
+                          </ui-text-area>
+                        </div>
+                      </div>
+
+                      <div class="col-6">
+                        <div class="form-group">
+                          <ui-label name="expedient" text="Antecedentes"
+                            message="Ingrese si posee o padece algun antecedente"></ui-label>
+                          <ui-text-area formControlName="expedient" [rows]="3">
+                          </ui-text-area>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+
+                </div>
+
+                <hr>
+              </ng-wizard-step>
+
+              <ng-wizard-step description="3">
+
+                <div class="row">
+                  <div class="col-9">
+                    <div class="form-group">
+                      <ui-label [group]="formGroup" name="observationDiagnostic"
+                        text="Plan de trabajo Observaciones y/o Comentarios"></ui-label>
+                      <ui-text-area [group]="formGroup" formControlName="observationDiagnostic" [rows]="3">
+                      </ui-text-area>
+                    </div>
+                  </div>
+
+                  <div class="col-3">
+                    <ui-label [group]="formGroup" name="answerControl"
+                      message="Indique si la atención es para control o no" text="¿Es atención de control?">
+                    </ui-label>
+                    <div class="form-group">
+                      <ui-dropdown [group]="formGroup" formControlName="answerControl" bindLabel="name" bindValue="id"
+                        [items]="answerConstrols">
+                      </ui-dropdown>
+                      <ui-validators [group]="formGroup" name="answerControl"></ui-validators>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="offset-md-9 col-md-3">
+                    <div class="text-right">
+                      <button type="button" class="btn btn-xs btn-success mr-2" (click)="loadDiagnostic()">
+                        <span><i class="fa fa-tickets"></i> Cargar Diagnostico</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-12 pt-5">
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th style="width: 35%">Diagnostico</th>
+                          <th style="width: 10%">Código</th>
+                          <th style="width: 20%">Tipo</th>
+                          <th>Observaciones</th>
+                          <th></th>
+                        </tr>
+                      </thead>
+
+                      <tbody formArrayName="diagnostics">
+                        <tr *ngIf="formGroup.get('diagnostics')['controls'].length == 0">
+                          <td colspan="5" style="width: 100%;">
+                            <div class="text text-center">
+                              <span
+                                [ngClass]="{'invalid-feedback force-invalid-feedback': formGroup.get('diagnostics').invalid && (formGroup.touched && formGroup.get('diagnostics').dirty || formGroup.get('diagnostics').touched)}">
+                                Cargue el diagnostico</span>
+                            </div>
+                          </td>
+                        </tr>
+
+                        <tr *ngFor="let item of formGroup.get('diagnostics')['controls']; let i = index;"
+                          [formGroupName]="i">
+
+                          <td>
+                            {{ item.value.diagnosticName }}
+                          </td>
+                          <td>
+                            {{ item.value.code }}
+                          </td>
+                          <td>
+                            {{ item.value.diagnosticType == 'PRESUNTIVO' ? "Presuntivo" : "Definitivo" }}
+                          </td>
+                          <td>
+                            <ui-text-area [group]="item" formControlName="observation" [rows]="2">
+                            </ui-text-area>
+                          </td>
+                          <td>
+                            <button class="btn btn-danger btn-icon btn-circle" type="button"
+                              (click)="removeDiagnostic($event, i)">
+                              <i class="fa fa-trash"></i>
+                            </button>
+                          </td>
+                        </tr>
+                      </tbody>
+
+                    </table>
+                  </div>
+                </div>
+              </ng-wizard-step>
+
+              <ng-wizard-step description="4">
+
+                <div class="row mt-3">
+                  <div class="offset-md-9 col-md-3">
+                    <div class="text-right">
+                      <button type="button" class="btn btn-xs btn-success mr-2" (click)="loadPrescription()">
+                        <span>Carga receta médica</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+
+                <div class="row">
+                  <div class="col-12 pt-5">
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th>Receta</th>
+                          <th style="width: 20%">Indicaciones generales</th>
+                          <th style="width: 20%">Observaciones</th>
+                          <th style="width: 15%"></th>
+                        </tr>
+                      </thead>
+
+                      <tbody formArrayName="prescriptions">
+                        <tr *ngIf="formGroup.get('prescriptions')['controls'].length == 0">
+                          <td colspan="4" style="width: 100%;">
+                            <div class="text text-center">
+                              <span
+                                [ngClass]="{'invalid-feedback force-invalid-feedback': formGroup.get('prescriptions').invalid && (formGroup.touched && formGroup.get('prescriptions').dirty || formGroup.get('prescriptions').touched)}">
+                                Cargue la receta</span>
+                            </div>
+                          </td>
+                        </tr>
+
+                        <tr *ngFor="let item of formGroup.get('prescriptions')['controls']; let i = index;"
+                          [formGroupName]="i">
+
+                          <td>
+                            {{ item.value.title }}
+                          </td>
+                          <td>
+                            {{ item.value.indication }}
+                          </td>
+                          <td>
+                            {{ item.value.observation }}
+                          </td>
+                          <td>
+                            <button class="btn btn-primary btn-circle mr-2" type="button"
+                              (click)="loadEditPrescription(item.value, i)">
+                              <i class="fa fa-edit"></i>
+                            </button>
+
+                            <button class="btn btn-success btn-circle mr-2" type="button"
+                              (click)="printPrescription(item.value)">
+                              <i class="fa fa-print"></i>
+                            </button>
+
+                            <button class="btn btn-danger btn-circle" type="button"
+                              (click)="removePrescription($event, i)">
+                              <i class="fa fa-trash"></i>
+                            </button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </ng-wizard-step>
+            </ng-wizard>
+          </div>
+        </div>
+
+        <div class="button-left pb-3 pr-4">
+
+          <button type="button" *ngIf="currentStep > 0" class="btn btn-primary float-left"
+            (click)="showPreviousStep($event)">
+            <i class="fa fa-angle-left"></i>
+            Regresar
+          </button>
+
+          <ng-container *ngIf="currentStep == 3 else behingprevoious">
+            <button type="button" class="btn btn-primary float-right" (click)="submit($event)">
+              Registrar atención
+            </button>
+          </ng-container>
+
+          <ng-template #behingprevoious>
+            <button type="button" class="btn btn-primary float-right" (click)="showNextStep($event)">
+              Siguiente
+              <i class="fa fa-angle-right"></i>
+            </button>
+          </ng-template>
+
+        </div>
+
+      </app-card>
+    </div>
+  </div>
+
+  <!-- <div class="row">
+    <div class="col-12">
+      <pre>{{ formGroup.getRawValue() | json }}</pre>
+    </div>
+  </div> -->
+</div>

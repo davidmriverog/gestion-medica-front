@@ -1,0 +1,220 @@
+<div class="row" [formGroup]="formGroup">
+  <input type="hidden" [formControlName]="modelIdPropertyName" />
+  <input type="hidden" formControlName="historyNumber" />
+  <input type="hidden" formControlName="active" />
+
+  <div class="col-md-6 col-sm-12">
+    <app-card cardClass="card-calendar" [options]="false" [customHeader]="true">
+
+      <div class="app-card-header">
+        <h5>Datos del paciente</h5>
+        <div class="card-header-right">
+          <button type="button" class="btn btn-xs btn-success" (click)="submit($event)">
+            <span><i class="fa fa-save"></i> Actualizar perfil</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-6">
+          <div class="form-group">
+            <ui-label [group]="formGroup" name="firstName" text="Primer nombre" message="Primer nombre del paciente">
+            </ui-label>
+            <ui-text-box [group]="formGroup" formControlName="firstName" placeholder="Ingrese primer nombre ..."
+              #firstname></ui-text-box>
+            <ui-validators [group]="formGroup" name="firstName"></ui-validators>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="form-group">
+            <ui-label [group]="formGroup" name="secondName" text="Segundo nombre" message="Segundo nombre del paciente">
+            </ui-label>
+            <ui-text-box [group]="formGroup" formControlName="secondName" placeholder="Ingrese segundo nombre ...">
+            </ui-text-box>
+            <ui-validators [group]="formGroup" name="secondName"></ui-validators>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-6">
+          <div class="form-group">
+            <ui-label [group]="formGroup" name="firstSurname" text="Apellido Paterno"
+              message="Primer apellido del paciente"></ui-label>
+            <ui-text-box [group]="formGroup" formControlName="firstSurname" placeholder="Ingrese apellido paterno ...">
+            </ui-text-box>
+            <ui-validators [group]="formGroup" name="firstSurname"></ui-validators>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="form-group">
+            <ui-label [group]="formGroup" name="secondSurname" text="Apellido Materno"
+              message="Segundo apellido del paciente"></ui-label>
+            <ui-text-box [group]="formGroup" formControlName="secondSurname" placeholder="Ingrese apellido materno ...">
+            </ui-text-box>
+            <ui-validators [group]="formGroup" name="secondSurname"></ui-validators>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-6">
+          <div class="form-group">
+            <ui-label [group]="formGroup" name="birthDate" text="Fecna de Nacimiento"
+              message="Fecha de nacimiento del paciente"></ui-label>
+            <ui-form-date [group]="formGroup" formControlName="birthDate"
+              [maxDate]="maxDate"
+            placeholder="Ingrese fecha de nacimiento ...">
+            </ui-form-date>
+            <ui-validators [group]="formGroup" name="birthDate"></ui-validators>
+          </div>
+        </div>
+        <div class="col-6">
+          <div class="form-group">
+            <ui-label [group]="formGroup" name="gender" text="Sexo:"></ui-label> <br>
+            <div class="form-check form-check-inline">
+              <ui-form-radio [group]="formGroup" formControlName="gender" [inline]="true" label="Masculino"
+                [value]="genderEnum.Male">
+              </ui-form-radio>
+              <ui-form-radio [group]="formGroup" formControlName="gender" [inline]="true" label="Femenino"
+                [value]="genderEnum.Female">
+              </ui-form-radio>
+            </div>
+            <ui-validators [group]="formGroup" name="gender"></ui-validators>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+
+        <div class="col-6">
+          <div class="form-group">
+            <ui-label [group]="formGroup" name="documentTypeId" text="Tipo de documento"
+              message="Tipo de documentación del paciente"></ui-label>
+            <ui-dropdown [group]="formGroup" formControlName="documentTypeId" bindLabel="name" bindValue="_id"
+              (change)="onDocumentTypeSelected($event)" [items]="(documentTypes$ | async)">
+            </ui-dropdown>
+            <ui-validators [group]="formGroup" name="documentTypeId"></ui-validators>
+          </div>
+        </div>
+
+        <div class="col-6">
+          <div class="form-group">
+            <ui-label [group]="formGroup" name="documentNumber" text="Nro. documento"
+              message="nro. de documento según el tipo de identificación"></ui-label>
+            <ui-text-box [group]="formGroup" formControlName="documentNumber"></ui-text-box>
+            <ui-validators [group]="formGroup" name="documentNumber"></ui-validators>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="row">
+        <div class="col-12">
+          <div class="form-group">
+            <ui-label [group]="formGroup" name="emailAddress" text="Correo electrónico"
+              message="Correo electrónico del paciente"></ui-label>
+            <ui-text-box [group]="formGroup" formControlName="emailAddress"></ui-text-box>
+            <ui-validators [group]="formGroup" name="emailAddress"></ui-validators>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-6">
+          <div class="form-group">
+            <ui-label [group]="formGroup" name="cellphone" text="Teléfono 1"
+              message="Teléfono de contacto, si es menor de edad colocar del padré o la madre o algún representante">
+            </ui-label>
+            <ui-text-box [group]="formGroup" formControlName="cellphone"></ui-text-box>
+            <ui-validators [group]="formGroup" name="cellphone"></ui-validators>
+          </div>
+        </div>
+
+        <div class="col-6">
+          <div class="form-group">
+            <ui-label [group]="formGroup" name="phone" text="Teléfono 2" message="Teléfono, campo opcional">
+            </ui-label>
+            <ui-text-box [group]="formGroup" formControlName="phone"></ui-text-box>
+            <ui-validators [group]="formGroup" name="phone"></ui-validators>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12">
+          <div class="form-group">
+            <ui-label [group]="formGroup" name="addresses" text="Lugar de domicilio"
+              message="Dirección habitacional del paciente, EJ: Comas Perú."></ui-label>
+            <ui-text-area [group]="formGroup" formControlName="addresses" [rows]="5"></ui-text-area>
+            <ui-validators [group]="formGroup" name="addresses"></ui-validators>
+          </div>
+        </div>
+      </div>
+
+
+    </app-card>
+
+  </div>
+
+  <div class="col-md-6 col-sm-12">
+    <app-card cardClass="card-datatable" [options]="false" [customHeader]="true">
+
+      <div class="app-card-header">
+        <h5>Enfermedades y/o alergías</h5>
+
+        <div class="card-header-right">
+          <button type="button" class="btn btn-xs btn-primary" (click)="newAffectionPatient()">
+            <span><i class="fa fa-plus"></i> Añadir</span>
+          </button>
+        </div>
+      </div>
+
+
+      <div class="dt-responsive">
+        <ui-admin-table #adminTable (refresh)="onRefresh($event)" [apiRecords]="(records$ | async)" [pageSize]="15">
+          <ng-template #contentFiltered>
+
+          </ng-template>
+
+          <p-table>
+            <ng-template pTemplate="header">
+              <tr>
+                <th scope="col">Nombre</th>
+                <th scope="col">Descripción</th>
+                <th scope="col" style="width: 15%" class="text-center">
+                  Acciones
+                </th>
+              </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-row>
+              <tr [pContextMenuRow]="row" [pSelectableRow]="row">
+                <td>
+                  <span class="badge badge-primary">
+                    {{ row.name }}
+                  </span>
+                </td>
+                <td>{{ row.description }}</td>
+                <td class="text-center">
+                  <button type="button" class="btn btn-sm btn-icon btn-success" (click)="editAffectionPatient(row)"
+                    ngbPopover="Editar" triggers="mouseenter:mouseleave"><i
+                      class="feather icon-check-circle"></i></button>
+                </td>
+              </tr>
+            </ng-template>
+
+            <ng-template pTemplate="emptymessage" let-columns>
+              <tr>
+                <td [attr.colspan]="3">
+                  No records found
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </ui-admin-table>
+      </div>
+
+    </app-card>
+  </div>
+</div>

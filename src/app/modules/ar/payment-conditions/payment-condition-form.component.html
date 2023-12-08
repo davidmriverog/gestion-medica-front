@@ -1,0 +1,59 @@
+
+<ui-modal-form title="Condición de pago | Formulario" [buttonClose]="true" [buttonSubmit]="true" [formGroup]="formGroup"
+  (formSubmit)="submit($event)">
+
+  <input type="hidden" [formControlName]="modelIdPropertyName" />
+  <input type="hidden" formControlName="createdAt" />
+
+  <div class="row">
+    <div class="col-12">
+      <ui-label [group]="formGroup" name="name" text="Condición de pago" message="Nombre de la condición de pago">
+      </ui-label>
+      <div class="form-group">
+        <ui-text-box [group]="formGroup" formControlName="name"></ui-text-box>
+        <ui-validators [group]="formGroup" name="name"></ui-validators>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-6">
+      <ui-label [group]="formGroup" name="code" text="Código" message="Código único del pago"></ui-label>
+      <div class="form-group">
+        <ui-text-box [group]="formGroup" formControlName="code"></ui-text-box>
+        <ui-validators [group]="formGroup" name="code"></ui-validators>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="form-group">
+        <div style="padding-top: 37px;">
+          <ui-check-box [group]="formGroup" formControlName="isCommission" label="Aplica comisión"></ui-check-box>
+          <ui-validators [group]="formGroup" name="isCommission"></ui-validators>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="row">
+
+    <div class="col-12">
+      <ui-label [group]="formGroup" name="percentageCommission" text="Porcentaje aplicado"
+        message="Porcentaje de comisión aplicada si lo refiere"></ui-label>
+      <div class="form-group">
+        <ui-currency-box [group]="formGroup" formControlName="percentageCommission" decimal="2"></ui-currency-box>
+        <ui-validators [group]="formGroup" name="percentageCommission"></ui-validators>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <div class="form-group">
+        <ui-check-box [group]="formGroup" formControlName="active" label="Activo"></ui-check-box>
+        <ui-validators [group]="formGroup" name="active"></ui-validators>
+      </div>
+    </div>
+  </div>
+
+</ui-modal-form>

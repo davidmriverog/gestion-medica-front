@@ -1,0 +1,30 @@
+<div [formGroup]="formGroup">
+    <p-fileUpload #fileUploader [files]="[]" name="image" [accept]="fileType" [multiple]="multiple"
+        [chooseLabel]="chooseLabel" [cancelLabel]="cancelLabel" [uploadLabel]="uploadLabel" [disabled]="disabled" [showUploadButton]="false"
+        [showCancelButton]="false" (onSelect)="onSelect($event)">
+
+        <ng-template let-file pTemplate="file">
+            <div class="ui-fileupload-row">
+                <div class="ui-fileupload-col-preview"><img [src]="file.objectURL" *ngIf="fileUploader?.isImage(file)"
+                        [width]="previewWidth" /></div>
+                <div class="ui-fileupload-col-name">{{ file.name }}</div>
+                <div class="ui-fileupload-col-size">{{ formatSize(file.size) }}</div>
+
+                <ng-container *ngIf="showRemoveButton">
+                    <div class="ui-fileupload-col-buttons">
+                        <button icon="pi pi-times" pButton type="button"
+                            class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only"
+                            (click)="removeFile(file)"></button>
+                    </div>
+                </ng-container>
+
+
+                <div class="ui-fileupload-col-buttons" *ngIf="showDownloadButton" style="margin-right: 5px;">
+                    <button icon="pi pi-download" pButton type="button"
+                        class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only"
+                        (click)="donwload(file)"></button>
+                </div>
+            </div>
+        </ng-template>
+    </p-fileUpload>
+</div>

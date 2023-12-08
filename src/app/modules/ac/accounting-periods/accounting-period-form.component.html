@@ -1,0 +1,75 @@
+<ui-modal-form title="Periodo contable | Formulario" [buttonClose]="true" [buttonSubmit]="true" [formGroup]="formGroup"
+  (formSubmit)="submit($event)">
+
+  <input type="hidden" [formControlName]="modelIdPropertyName" />
+  <input type="hidden" formControlName="createdAt" />
+  <input type="hidden" formControlName="accountingPeriodParentId" />
+
+  <input type="hidden" formControlName="isOpened" />
+
+  <div class="row">
+    <div class="col-12">
+      <div class="form-group">
+        <ui-label [group]="formGroup" name="name" text="Periodo" message="Periodo contable del mes"></ui-label>
+        <ui-text-box [group]="formGroup" formControlName="name"></ui-text-box>
+        <ui-validators [group]="formGroup" name="name"></ui-validators>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-6">
+      <div class="form-group">
+        <ui-label [group]="formGroup" name="startDate" text="Fecha de inicio" message="Rango inicial del periodo">
+        </ui-label>
+        <ui-form-date [group]="formGroup" formControlName="startDate" placeholder="Ingrese fecha de inicio ...">
+        </ui-form-date>
+        <ui-validators [group]="formGroup" name="startDate"></ui-validators>
+      </div>
+    </div>
+
+    <div class="col-6">
+      <div class="form-group">
+        <ui-label [group]="formGroup" name="endDate" text="Fecha de culminación"
+          message="Rango fin o fecha de culminación del periodo"></ui-label>
+        <ui-form-date [group]="formGroup" formControlName="endDate" placeholder="Ingrese fecha de culminación ...">
+        </ui-form-date>
+        <ui-validators [group]="formGroup" name="endDate"></ui-validators>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="row">
+    <div class="col-9">
+      <ui-label [group]="formGroup" name="accountingPeriodParentId" text="Periodo anterior"
+        message="Periodo anterior asociado"></ui-label>
+      <div class="form-group">
+        <ui-dropdown [group]="formGroup" formControlName="accountingPeriodParentId" bindLabel="name" bindValue="_id"
+          (change)="changeAccountingPeriod($event)" [items]="(accountingPeriodParents$ | async)">
+        </ui-dropdown>
+        <ui-validators [group]="formGroup" name="accountingPeriodParentId"></ui-validators>
+      </div>
+    </div>
+    <div class="col-3">
+      <div class="form-group">
+        <ui-label [group]="formGroup" name="initBalance" text="Saldo inicial" message="Saldo inicial del mes">
+        </ui-label>
+        <ui-currency-box [group]="formGroup" formControlName="initBalance"></ui-currency-box>
+        <ui-validators [group]="formGroup" name="initBalance"></ui-validators>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <div class="form-group">
+        <ui-label [group]="formGroup" name="observation" text="Observaciones"
+          message="Comentario o observaciones adicionales al periodo"></ui-label>
+        <ui-text-area [group]="formGroup" formControlName="observation" [rows]="3"></ui-text-area>
+        <ui-validators [group]="formGroup" name="observation"></ui-validators>
+      </div>
+    </div>
+  </div>
+
+</ui-modal-form>

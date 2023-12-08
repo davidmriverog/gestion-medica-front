@@ -1,0 +1,93 @@
+<div class="row" [formGroup]="formGroup">
+  <input type="hidden" [formControlName]="modelIdPropertyName" />
+  <input type="hidden" formControlName="createdAt" />
+  <input type="hidden" formControlName="accountingPeriodId" />
+  <input type="hidden" formControlName="medicalOfficeId" />
+  <input type="hidden" formControlName="specialityId" />
+  <input type="hidden" formControlName="active" />
+
+  <div class="col-md-12 col-sm-12">
+    <app-card cardClass="card-datatable" [options]="false" [customHeader]="true">
+      <div class="app-card-header">
+        <div class="card-header-right">
+          <button type="button" class="btn btn-xs btn-success" (click)="submit($event)">
+            <span><i class="fa fa-user-md"></i> Crear turno(s)</span>
+          </button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12 col-sm-12">
+          <ui-label [group]="formGroup" name="doctorId" text="Médico / Profesional"
+            message="Médico profesional que se le generará su programación médica de cupos para la atención y/o procedimientos">
+          </ui-label>
+          <ui-doctor-box [group]="formGroup" formControlName="doctorId" (changed)="selectDoctor($event)"
+            (onDoctorClear)="onDoctorClear($event)"></ui-doctor-box>
+          <ui-validators [group]="formGroup" name="doctorId"></ui-validators>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6 col-sm-12">
+          <ui-label [group]="formGroup" name="specialityId" text="Especialidad" message="Especialidad del médico">
+          </ui-label>
+          <ui-dropdown [group]="formGroup" formControlName="specialityId" bindLabel="name" bindValue="_id"
+            [items]="(specialities$ | async)">
+          </ui-dropdown>
+          <ui-validators [group]="formGroup" name="specialityId"></ui-validators>
+        </div>
+        <div class="col-md-6 col-sm-12">
+          <ui-label [group]="formGroup" name="productCategoryId" text="Tipo de producto"
+            message="Tipo de producto a programar (Consulta / Procedimiento)"></ui-label>
+          <ui-dropdown [group]="formGroup" formControlName="productCategoryId" bindLabel="name"
+            (change)="onProductCategorySelected($event)" bindValue="_id" [items]="(productCategories$ | async)">
+          </ui-dropdown>
+          <ui-validators [group]="formGroup" name="productCategoryId"></ui-validators>
+        </div>
+      </div>
+    </app-card>
+  </div>
+
+  <div class="col-md-4 col-sm-12">
+    <app-card cardClass="card-calendar" [options]="false" [customHeader]="true">
+
+      <div class="app-card-header">
+        <div class="card-header-right">
+          <button type="button" class="btn btn-xs btn-danger" (click)="redirectToMain()">
+            <span><i class="fa fa-redo"></i> Regresar</span>
+          </button>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <ui-calendar-box [group]="formGroup" formControlName="dates" [minDate]="minDate" [maxDate]="maxDate">
+          </ui-calendar-box>
+        </div>
+      </div>
+    </app-card>
+
+    <!-- <pre>{{ formGroup.getRawValue() | json }}</pre> -->
+  </div>
+
+  <div class="col-md-8 col-sm-12">
+    <app-card cardClass="card-datatable" [options]="false" [customHeader]="true">
+      <ng-container *ngIf="formGroup.get('planningTurnDetails')['controls'].length === 0 else dayCalendars">
+        <div class="alert alert-warning">
+          <strong>No ha seleccionado un día..</strong>
+        </div>
+      </ng-container>
+      <ng-template #dayCalendars>
+        <p-tabView formArrayName="planningTurnDetails">
+          <p-tabPanel *ngFor="let item of formGroup.get('planningTurnDetails')['controls']; let i = index;"
+            [formGroupName]="i">
+            <ng-template pTemplate="header">
+              <i class="fas fa-clock"></i>
+              <span class="ml-2">{{ item.value.date | utcDate:"dd-MM-yyyy" }}</span>
+            </ng-template>
+
+            <ui-calendar-coupons [group]="item" [attentionDate]="item.value.date"  [medicalOfficeId]="medicalOfficeId">
+            </ui-calendar-coupons>
+          </p-tabPanel>
+        </p-tabView>
+      </ng-template>
+    </app-card>
+  </div>
+</div>

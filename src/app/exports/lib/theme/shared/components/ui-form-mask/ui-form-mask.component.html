@@ -1,0 +1,4 @@
+<div class="form-group">
+
+    <input type="text" #customMask class="form-control" [validation]="true" [(ngModel)]="value" [clearIfNotMatch]="true" [mask]="masked" [placeholder]="placeholder" (ngModelChange)="onChange($event)" [disabled]="disabled" [ngClass]="{ 'input-validation-error is-invalid': control && control.errors && (control.dirty) }">
+</div>

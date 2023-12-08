@@ -1,0 +1,68 @@
+<div class="row" [formGroup]="formGroup">
+
+  <input type="hidden" [formControlName]="modelIdPropertyName" />
+  <input type="hidden" formControlName="createdAt" />
+
+  <div class="col-md-12 col-sm-12">
+
+    <app-card cardClass="card-calendar" [options]="false" [customHeader]="true">
+
+      <div class="app-card-header">
+        <div class="card-header-right">
+
+          <button type="button" class="btn btn-xs btn-primary mr-2" (click)="goBack()">
+            <span>Regresar</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-3 col-sm-12">
+
+          <label style="font-weight: 600;">Rol:</label>
+          <div class="form-group">
+            <span>{{ (role$ | async)?.name }}</span>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-12">
+
+          <label style="font-weight: 600;">Código:</label>
+          <div class="form-group">
+            <span>{{ (role$ | async)?.code }}</span>
+          </div>
+        </div>
+      </div>
+
+    </app-card>
+
+    <hr>
+
+    <div class="row mb-3">
+      <div class="col-12 text-center">
+        <button type="button" class="btn btn-xs btn-warning mr-2" (click)="submit($event)" placement="top"
+          ngbTooltip="Registramos nueva venta">
+          <span><i class="fa fa-save"></i> Editar Permisos [F2]</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="row mb-3">
+      <div class="col-md-12 col-sm-12">
+        <app-card cardClass="card-calendar" [options]="false" [customHeader]="true">
+          <p-pickList sourceHeader="Lista de permisos" targetHeader="Permisos asginados" filterBy="name"
+            [source]="sourcePermissions" [target]="targetPermissions" [responsive]="true" [dragdrop]="true">
+            <ng-template let-permission pTemplate="item">
+              <div class="p-icon-permission">
+                <i class="feather icon-lock"></i>
+                <span>{{ permission.name }}</span><br>
+                <span class="badge badge-success"> {{ permission.resource.name }}</span>
+              </div>
+            </ng-template>
+          </p-pickList>
+        </app-card>
+      </div>
+    </div>
+
+  </div>
+
+</div>

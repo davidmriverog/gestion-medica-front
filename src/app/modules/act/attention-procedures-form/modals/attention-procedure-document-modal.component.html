@@ -1,0 +1,47 @@
+<div class="modal-header">
+    <span class="modal-title">
+        Carga de documento
+    </span>
+</div>
+
+<div class="modal-body" [formGroup]="formDocument">
+
+     <div class="row">
+        <div class="col-md-6">
+            <ui-label [group]="formDocument" name="title" text="Título" message="Nombre del archivo o examen"></ui-label>
+            <ui-text-box [group]="formDocument" formControlName="title"></ui-text-box>
+            <ui-validators [group]="formDocument" name="title"></ui-validators>
+        </div>
+
+        <div class="col-md-6">
+            <ui-label [group]="formDocument" name="responsibleDoctor" text="Médico responsable" message="Datos del médico responsable"></ui-label>
+            <ui-text-box [group]="formDocument" formControlName="responsibleDoctor"></ui-text-box>
+            <ui-validators [group]="formDocument" name="responsibleDoctor"></ui-validators>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="form-group">
+                <ui-label [group]="formDocument" name="attachments" text="Documentos:" message="Documentos a adjuntar">
+                </ui-label> <br>
+                <ui-file-upload [group]="formDocument" formControlName="attachments"
+                    [multiple]="true" fileType="image/*,.pdf,.doc,.docx,.xls,.xlsx">
+                </ui-file-upload>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="modal-footer">
+    <div class="align-right">
+        <button class="btn btn-success mr-3" (click)="saveDocument()">
+            Agregar documentación
+        </button>
+
+        <button class="btn btn-danger" (click)="activeModal.dismiss('Cross click')">
+            Salir
+        </button>
+    </div>
+</div>

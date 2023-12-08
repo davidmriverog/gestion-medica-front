@@ -1,0 +1,33 @@
+<div class="row">
+  <div class="col-md-12 col-sm-12">
+    <app-card cardClass="card-datatable" [options]="false" [customHeader]="true" [formGroup]="filterForm">
+
+      <div class="row">
+        <div class="col-4">
+          <ui-label [group]="filterForm" name="accountingPeriodId" text="Período"
+            message="Período de trabajo de las programaciones médicas"></ui-label>
+          <ui-dropdown [group]="filterForm" formControlName="accountingPeriodId" bindLabel="name" bindValue="_id"
+            (change)="selectPeriod($event)"
+            [items]="(periods$ | async)">
+          </ui-dropdown>
+        </div>
+
+        <div class="col-8">
+          <ui-label [group]="filterForm" name="medicalOfficeId" text="Consultorio"
+            message="Lista de consultorios"></ui-label>
+          <ui-dropdown [group]="filterForm" formControlName="medicalOfficeId" bindLabel="officeName" bindValue="_id"
+            [items]="(medicalOffices$ | async)">
+          </ui-dropdown>
+        </div>
+      </div>
+
+    </app-card>
+  </div>
+
+  <div class="col-md-12 col-sm-12">
+    <app-card cardClass="card-datatable" [options]="false" [customHeader]="true">
+      <p-fullCalendar #fullCalendar [options]="options" [events]="(events$ | async)">
+      </p-fullCalendar>
+    </app-card>
+  </div>
+</div>

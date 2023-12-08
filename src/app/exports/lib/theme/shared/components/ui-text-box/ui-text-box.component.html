@@ -1,0 +1,9 @@
+<div>
+    <input
+    	type="text"
+    	class="form-control"
+    	#innerInput
+        [ngClass]="{ 'is-invalid': control.dirty && control.errors }"
+        [placeholder]="placeholder"
+        [(ngModel)]="value" [disabled]="disabled" (ngModelChange)="onChange($event)" />
+</div>

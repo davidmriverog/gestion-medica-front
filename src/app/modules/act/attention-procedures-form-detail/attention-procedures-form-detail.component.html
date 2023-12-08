@@ -1,0 +1,196 @@
+<ng-container *ngIf="(actMedical$ | async) != null else isLoading">
+
+  <div class="row">
+    <div class="col-12">
+      <app-card cardClass="card-datatable" [options]="false" [customHeader]="true">
+
+        <div class="app-card-header">
+          <h5>Datos del paciente</h5>
+          <div class="card-header-right">
+
+            <button type="button" class="btn btn-xs btn-info" (click)="redirectToMain()">
+              <span>Regresar</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6 col-sm-12">
+            <strong>Apellido(s) y nombre(s)</strong><br>
+            <span>
+              {{ ( actMedical$ | async)?.planningMedicalCouponTurn?.saleDetail?.sale?.patient?.firstName
+              }}
+              {{ (actMedical$ | async)?.planningMedicalCouponTurn?.saleDetail?.sale?.patient?.firstSurname
+              }}
+            </span>
+          </div>
+
+          <div class="col-md-2 col-sm-6">
+            <strong>Género</strong><br>
+            <span>
+              {{ (actMedical$ | async)?.planningMedicalCouponTurn?.saleDetail?.sale?.patient?.gender ==
+              "M" ?
+              "Masculino" : "Femenino" }}
+            </span>
+          </div>
+
+          <div class="col-md-2 col-sm-6">
+            <strong>Nro. historia</strong><br>
+            <span class="badge badge-success">
+              {{ (actMedical$ |
+              async)?.planningMedicalCouponTurn?.saleDetail?.sale?.patient?.historyNumber }}
+            </span>
+          </div>
+
+          <div class="col-md-2 col-sm-6">
+            <strong>Edad</strong><br>
+            <span>
+              {{ showAge((actMedical$ |
+              async)?.planningMedicalCouponTurn?.saleDetail?.sale?.patient?.birthDate) }}
+            </span>
+          </div>
+
+        </div>
+
+      </app-card>
+    </div>
+  </div>
+
+  <hr>
+
+  <div class="row">
+    <div class="col-12">
+      <app-card cardClass="card-datatable" [options]="false" [customHeader]="true">
+
+        <div class="app-card-header">
+          <h5>Atención procedimiento</h5>
+        </div>
+
+        <div class="row">
+          <div class="col-12">
+
+            <strong>Informe médico</strong><br>
+            <div class="form-group">
+              <div [innerHTML]="(actMedical$ | async)?.medicalReport" class="report-content"></div>
+            </div>
+
+          </div>
+        </div>
+
+      </app-card>
+    </div>
+  </div>
+
+  <hr>
+
+  <div class="row">
+    <div class="col-12">
+      <app-card cardClass="card-datatable" [options]="false" [customHeader]="true">
+
+        <div class="app-card-header">
+          <h5>Receta médica</h5>
+        </div>
+
+        <div class="row">
+          <div class="col-12">
+            <table class="table table-bordered">
+
+              <thead>
+                <tr>
+                  <th>Receta</th>
+                  <th style="width: 20%">Indicaciones generales</th>
+                  <th style="width: 20%">Observaciones</th>
+                  <th style="width: 5%"></th>
+                </tr>
+              </thead>
+
+              <tbody>
+
+
+                <tr *ngFor="let item of (actMedical$ | async)?.prescriptions; let i = index;">
+
+                  <td>
+                    {{ item.title }}
+                  </td>
+                  <td>
+                    {{ item.indication }}
+                  </td>
+                  <td>
+                    {{ item.observation }}
+                  </td>
+                  <td class="text-center">
+
+                    <button class="btn btn-success btn-circle mr-2" type="button" (click)="printPrescription(item)">
+                      <i class="fa fa-print"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+
+            </table>
+          </div>
+        </div>
+
+      </app-card>
+    </div>
+  </div>
+
+  <hr>
+
+  <div class="row">
+    <div class="col-12">
+      <app-card cardClass="card-datatable" [options]="false" [customHeader]="true">
+
+        <div class="app-card-header">
+          <h5>Documentos</h5>
+        </div>
+
+        <div class="row">
+          <div class="col-12">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>Título</th>
+                  <th style="width: 35%">Médico responsable</th>
+                  <th style="width: 15%"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of (actMedical$ | async)?.documents; let i = index;">
+
+                  <td>
+                    {{ item.title | uppercase }}
+                  </td>
+                  <td>
+                    {{ item.responsibleDoctor | uppercase }}
+                  </td>
+                  <td class="text-center">
+                    <button type="button" class="btn btn-success mr-2" (click)="loadDetailDocuments(item)">
+                      <i class="fa fa-file"></i> Ver adjuntos
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </app-card>
+    </div>
+  </div>
+
+</ng-container>
+
+<ng-template #isLoading>
+
+  <div class="row">
+    <div class="col-12">
+      <app-card cardClass="card-datatable" [options]="false" [customHeader]="true">
+        <div class="alert alert-warning">
+          <strong>Cargando atención...</strong>
+        </div>
+      </app-card>
+    </div>
+  </div>
+
+</ng-template>

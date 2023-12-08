@@ -1,0 +1,12 @@
+<div class="input-group">
+    <input type="text" class="form-control" [bsConfig]="bsConfigDate" #drp="bsDatepicker" bsDatepicker readonly
+        [(ngModel)]="valueSelected" (bsValueChange)="onChange($event)" [placeholder]="placeholder"
+        [maxDate]="maxDate" [minDate]="minDate"
+        [disabled]="disabled" [ngClass]="{ 'is-invalid': control.dirty && control.errors }">
+
+    <div class="input-group-append">
+        <span class="input-group-text" (click)="drp.toggle()">
+            <i class="feather icon-calendar"></i>
+        </span>
+    </div>
+</div>

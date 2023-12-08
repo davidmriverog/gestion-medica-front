@@ -1,0 +1,107 @@
+<div class="modal-body" [formGroup]="formSearchGroup">
+
+    <div class="row">
+        <div class="col-md-4 col-sm-12">
+            <div class="form-group">
+                <ui-label [group]="formSearchGroup" name="dateRanger" text="Rango de fechas" message="Rango de fechas para filtrar las atenciones disponibles según esta selección"></ui-label>
+                <ui-form-date-ranger [group]="formSearchGroup" formControlName="dateRanger"
+                    placeholder="Ingrese rango de fechas ..." [minDate]="minDate"></ui-form-date-ranger>
+            </div>
+        </div>
+        <div class="col-md-6 col-sm-12">
+            <div class="form-group">
+                <ui-label [group]="formSearchGroup" name="doctors" text="Doctores" message="Selección de doctor(es) a filtrar"></ui-label>
+                <ui-dropdown [group]="formSearchGroup" formControlName="doctors" [multiple]="true" bindLabel="fullName" bindValue="_id" [items]="(doctors$ | async)">
+                </ui-dropdown>
+                <ui-validators [group]="formSearchGroup" name="doctors"></ui-validators>
+            </div>
+        </div>
+
+        <div class="col-md-2 col-sm-12">
+            <div class="text-center" style="padding: 32px;">
+                <button class="btn btn-warning mr-2" (click)="fetch()">
+                    Buscar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <hr />
+
+    <div class="row">
+        <div class="col-12">
+            <app-card cardClass="card-datatable" [options]="false" [customHeader]="true">
+
+                <div class="row">
+                    <div class="col-12">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th style="width: 15%;">Especialidad</th>
+                                    <th style="width: 20%;">Consultorio</th>
+                                    <th style="width: 10%;">Fecha de At.</th>
+                                    <th style="width: 20%;">Medico / Profesional</th>
+                                    <th style="width: 25%;">Cupo</th>
+                                    <th style="width: 10%;">Acción</th>
+                                </tr>
+                            </thead>
+
+                            <tbody formArrayName="results">
+                                <tr *ngIf="isSearching">
+                                    <td colspan="6">
+                                        <div class="alert alert-warning">
+                                            <strong>Cargando...</strong>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <tr *ngIf="formSearchGroup.get('results')['controls'].length == 0 && !isSearching">
+                                    <td colspan="6" style="width: 100%;">
+                                        <div class="alert alert-warning">
+                                                Sin registros, encontrados.</div>
+                                    </td>
+                                </tr>
+
+                                <ng-container *ngFor="let item of formSearchGroup.get('results')['controls']; let i = index;" [formGroupName]="i">
+                                    <tr *ngIf="formSearchGroup.get('results')['controls'].length > 0 && !isSearching">
+                                        <td>{{ item.value.specialityName }} - <span class="badge badge-success">{{ item.value.productCategoryName }}</span></td>
+                                        <td>{{ item.value.medicalOfficeName }}</td>
+                                        <td>{{ convertStrToDate(item.value.attentionDateStr) }}</td>
+                                        <td>{{ item.value.doctorFullName }}</td>
+                                        <td>
+                                            <ui-dropdown [group]="item" formControlName="planningMedicalCouponTurnId" bindLabel="title"
+                                                (change)="selectedCoupon($event, item, i)"
+                                                bindValue="_id" [items]="item.value.coupons">
+                                            </ui-dropdown>
+                                            <ui-validators [group]="item" name="planningMedicalCouponTurnId"></ui-validators>
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-success" [disabled]="isDisableCoupon(item)"
+                                                (click)="confirm(item.value)">
+
+                                                Elegir cupo
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </ng-container>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </app-card>
+        </div>
+    </div>
+
+</div>
+
+<div class="modal-footer">
+    <div class="align-right">
+
+
+        <button class="btn btn-danger" (click)="activeModal.dismiss('Cross click')">
+            Salir
+        </button>
+    </div>
+</div>

@@ -1,0 +1,262 @@
+<div class="auth-wrapper align-items-stretch aut-bg-img">
+  <div class="flex-grow-1">
+    <div class="h-100 d-md-flex align-items-center auth-side-img">
+      <div class="col-sm-10 auth-content w-auto">
+        <img src="assets/images/auth/manologin.png" alt="" class="img-fluid w-50">
+        <h1 class="text-white my-4">{{ titleApp }}</h1>
+        <h4 class="text-white font-weight-normal">
+          {{ descriptionApp }}
+        </h4>
+      </div>
+    </div>
+    <form class="auth-side-form" [formGroup]="formGroup">
+      <input type="hidden" formControlName="historyNumber" />
+      <input type="hidden" formControlName="createdAt" />
+
+      <div class="container mt-5">
+
+
+        <div class="row align-items-center mb-3">
+          <div class="col-2">
+
+          </div>
+          <div class="col-8">
+            <div class="text-center">
+              <h2 class="title-step">{{ stepMessage }}</h2>
+            </div>
+          </div>
+          <div class="col-2">
+
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-12">
+            <ng-wizard [config]="config" (stepChanged)="stepChanged($event)">
+
+              <ng-wizard-step description="1">
+                <div class="row">
+                  <div class="col-6">
+                    <div class="form-group">
+                      <ui-label [group]="formGroup" name="firstName" text="Primer nombre"
+                        message="Primer nombre del paciente">
+                      </ui-label>
+                      <ui-text-box [group]="formGroup" formControlName="firstName"
+                        placeholder="Ingrese primer nombre ..." #firstname></ui-text-box>
+                      <ui-validators [group]="formGroup" name="firstName"></ui-validators>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="form-group">
+                      <ui-label [group]="formGroup" name="secondName" text="Segundo nombre"
+                        message="Segundo nombre del paciente">
+                      </ui-label>
+                      <ui-text-box [group]="formGroup" formControlName="secondName"
+                        placeholder="Ingrese segundo nombre ...">
+                      </ui-text-box>
+                      <ui-validators [group]="formGroup" name="secondName"></ui-validators>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-6">
+                    <div class="form-group">
+                      <ui-label [group]="formGroup" name="firstSurname" text="Apellido Paterno"
+                        message="Primer apellido del paciente"></ui-label>
+                      <ui-text-box [group]="formGroup" formControlName="firstSurname"
+                        placeholder="Ingrese apellido paterno ...">
+                      </ui-text-box>
+                      <ui-validators [group]="formGroup" name="firstSurname"></ui-validators>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="form-group">
+                      <ui-label [group]="formGroup" name="secondSurname" text="Apellido Materno"
+                        message="Segundo apellido del paciente"></ui-label>
+                      <ui-text-box [group]="formGroup" formControlName="secondSurname"
+                        placeholder="Ingrese apellido materno ...">
+                      </ui-text-box>
+                      <ui-validators [group]="formGroup" name="secondSurname"></ui-validators>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-6">
+                    <div class="form-group">
+                      <ui-label [group]="formGroup" name="birthDate" text="Fecna de Nacimiento"
+                        message="Fecha de nacimiento del paciente"></ui-label>
+                      <ui-form-date [group]="formGroup" formControlName="birthDate"
+                        placeholder="Ingrese fecha de nacimiento ...">
+                      </ui-form-date>
+                      <ui-validators [group]="formGroup" name="birthDate"></ui-validators>
+                    </div>
+                  </div>
+                  <div class="col-6">
+                    <div class="form-group">
+                      <ui-label [group]="formGroup" name="gender" text="Sexo:"></ui-label> <br>
+                      <div class="form-check form-check-inline">
+                        <ui-form-radio [group]="formGroup" formControlName="gender" [inline]="true" label="Masculino"
+                          [value]="genderEnum.Male">
+                        </ui-form-radio>
+                        <ui-form-radio [group]="formGroup" formControlName="gender" [inline]="true" label="Femenino"
+                          [value]="genderEnum.Female">
+                        </ui-form-radio>
+                      </div>
+                      <ui-validators [group]="formGroup" name="gender"></ui-validators>
+                    </div>
+                  </div>
+                </div>
+
+
+              </ng-wizard-step>
+
+              <ng-wizard-step description="2">
+
+                <div class="row">
+                  <div class="col-12">
+                    <div class="form-group">
+                      <ui-label [group]="formGroup" name="emailAddress" text="Correo electrónico"
+                        message="Correo electrónico del paciente"></ui-label>
+                      <ui-text-box [group]="formGroup" formControlName="emailAddress">
+                      </ui-text-box>
+                      <ui-validators [group]="formGroup" name="emailAddress"></ui-validators>
+                    </div>
+                  </div>
+                </div>
+
+
+                <div class="row">
+                  <div class="col-6">
+                    <div class="form-group">
+                      <ui-label [group]="formGroup" name="cellphone" text="Teléfono 1"
+                        message="Teléfono de contacto, si es menor de edad colocar del padré o la madre o algún representante">
+                      </ui-label>
+                      <ui-text-box [group]="formGroup" formControlName="cellphone"></ui-text-box>
+                      <ui-validators [group]="formGroup" name="cellphone"></ui-validators>
+                    </div>
+                  </div>
+
+                  <div class="col-6">
+                    <div class="form-group">
+                      <ui-label [group]="formGroup" name="phone" text="Teléfono 2" message="Teléfono, campo opcional">
+                      </ui-label>
+                      <ui-text-box [group]="formGroup" formControlName="phone"></ui-text-box>
+                      <ui-validators [group]="formGroup" name="phone"></ui-validators>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+
+                  <div class="col-6">
+                    <div class="form-group">
+                      <ui-label [group]="formGroup" name="documentTypeId" text="Tipo de documento"
+                        message="Tipo de documentación del paciente"></ui-label>
+                      <ui-dropdown [group]="formGroup" formControlName="documentTypeId" bindLabel="name" bindValue="_id"
+                        (change)="onDocumentTypeSelected($event)" [items]="(documentTypes$ | async)">
+                      </ui-dropdown>
+                      <ui-validators [group]="formGroup" name="documentTypeId"></ui-validators>
+                    </div>
+                  </div>
+
+                  <div class="col-6">
+                    <div class="form-group">
+
+                      <ui-label [group]="formGroup" name="documentNumber" text="Nro. documento"
+                        message="nro. de documento según el tipo de identificación"></ui-label>
+
+                      <ui-text-box [group]="formGroup" formControlName="documentNumber">
+                      </ui-text-box>
+
+                      <ui-validators [group]="formGroup" name="documentNumber"></ui-validators>
+
+                    </div>
+                  </div>
+
+                </div>
+
+                <div class="row">
+                  <div class="col-12">
+                    <div class="form-group">
+                      <ui-label [group]="formGroup" name="addresses" text="Lugar de domicilio"
+                        message="Dirección habitacional del paciente, EJ: Comas Perú.">
+                      </ui-label>
+                      <ui-text-area [group]="formGroup" formControlName="addresses" [rows]="5">
+                      </ui-text-area>
+                      <ui-validators [group]="formGroup" name="addresses"></ui-validators>
+                    </div>
+                  </div>
+                </div>
+
+              </ng-wizard-step>
+
+              <ng-wizard-step description="3">
+
+                <div class="row">
+                  <div class="col-12">
+                    <div class="form-group">
+                      <ui-label [group]="formGroup" name="username" text="Usuario" message="Usuario de acceso">
+                      </ui-label>
+                      <ui-text-box [group]="formGroup" formControlName="username">
+                      </ui-text-box>
+                      <ui-validators [group]="formGroup" name="username"></ui-validators>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-6">
+                    <div class="form-group">
+                      <ui-label [group]="formGroup" name="password" text="Ingresa clave"
+                        message="Contraseña de acceso a nuestra plataforma">
+                      </ui-label>
+                      <ui-password-box [group]="formGroup" formControlName="password">
+                      </ui-password-box>
+                      <ui-validators [group]="formGroup" name="password"></ui-validators>
+                    </div>
+                  </div>
+
+                  <div class="col-6">
+                    <div class="form-group">
+                      <ui-label [group]="formGroup" name="confirmPassword" text="Confirma clave"
+                        message="Confirme su contraseña y ambas deberán coincidir."></ui-label>
+                      <ui-password-box [group]="formGroup" formControlName="confirmPassword">
+                      </ui-password-box>
+                      <ui-validators [group]="formGroup" name="confirmPassword"></ui-validators>
+                    </div>
+                  </div>
+                </div>
+
+              </ng-wizard-step>
+            </ng-wizard>
+          </div>
+        </div>
+
+
+        <div class="button-left pb-3 pr-4">
+
+          <button type="button" class="btn btn-primary float-left" (click)="showPreviousStep($event)">
+            Regresar
+          </button>
+
+          <ng-container *ngIf="currentStep == 2 else behingprevoious">
+            <button type="button" class="btn btn-primary float-right" (click)="submit($event)">
+              Registrarse
+            </button>
+          </ng-container>
+
+          <ng-template #behingprevoious>
+            <button type="button" class="btn btn-primary float-right" (click)="showNextStep($event)">
+              Siguiente
+            </button>
+          </ng-template>
+
+
+        </div>
+      </div>
+
+    </form>
+  </div>
+</div>

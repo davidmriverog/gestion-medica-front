@@ -1,0 +1,123 @@
+<div class="row">
+
+  <div class="col-12">
+
+    <app-card [hidHeader]="false" cardClass="card-datatable" customHeader="true">
+
+      <div class="app-card-header">
+        <h5>Historial de atenciones</h5>
+        <div class="card-header-right">
+
+          <button type="button" class="btn btn-xs btn-warning ml-1" (click)="adminTable.refreshing()">
+            <span><i class="fa fa-redo"></i> Refrescar</span>
+          </button>
+
+          <button type="button" class="btn btn-xs btn-primary ml-1" (click)="adminTable.clearFilters()">
+            <span><i class="fa fa-eraser"></i> Limpiar</span>
+          </button>
+
+          <button type="button" class="btn btn-xs btn-danger ml-1" (click)="adminTable.openFilter()">
+            <span><i class="fa fa-filter"></i> Filtros</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="dt-responsive">
+        <ui-admin-table #adminTable (refresh)="onRefresh($event)" [apiRecords]="(records$ | async)" [pageSize]="15">
+          <ng-template #contentFiltered>
+            <div class="row">
+              <div class="col-12">
+                <ui-text-filter label="Nro. reserva" property="orderSales" mode="like">
+                </ui-text-filter>
+              </div>
+            </div>
+
+          </ng-template>
+
+          <p-table>
+            <ng-template pTemplate="header">
+              <tr>
+                <th scope="col">Cupo</th>
+                <th scope="col">Fecha atención</th>
+                <th scope="col">Orden de venta</th>
+                <th scope="col">Fecha de venta</th>
+                <th scope="col">Nro. historía</th>
+                <th scope="col">Paciente</th>
+                <th scope="col">hora consulta</th>
+                <th scope="col" style="width: 10%">Tipo</th>
+                <th scope="col" style="width: 10%">Estado</th>
+              </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-row>
+              <tr [pContextMenuRow]="row" [pSelectableRow]="row">
+                <td>
+                  <span class="badge badge-primary">
+                    {{ row.title }}
+                  </span>
+                </td>
+                <td>
+                  <strong>{{ row.planningMedicalTurn?.attentionDate | date:"dd-MM-yyyy" }}</strong>
+                </td>
+                <td>
+                  <span class="badge badge-info">
+                    {{ row.detail?.saleInfo?.orderSales ? row.detail?.saleInfo?.orderSales : "-" }}
+                  </span>
+                </td>
+                <td>
+                  <strong>
+                    {{ row.detail?.saleInfo?.createdAt ? (row.detail?.saleInfo?.createdAt | date: "dd-MM-yyyy HH:mm") :
+                    "-" }}
+                  </strong>
+                </td>
+                <td>
+                  <span class="badge badge-warning">
+                    {{ row.detail?.saleInfo?.patient?.historyNumber ? row.detail?.saleInfo?.patient?.historyNumber : "-"
+                    }}
+                  </span>
+                </td>
+                <td>
+                  {{ row.detail != null ? (row.detail?.saleInfo?.patient?.firstName +" "+
+                  row.detail?.saleInfo?.patient?.firstSurname) : "-" }}
+                </td>
+                <td>
+                  <span class="badge badge-success">
+                    <i class="fa fa-clock"></i> {{ row.start }}
+                  </span>
+                </td>
+                <td>
+                  <span class="badge" [ngClass]="{'badge-primary': row.planningMedicalTurn.productCategory.code == 'CONS', 'badge-danger': row.planningMedicalTurn.productCategory.code == 'PROC'}">
+                    {{ row.planningMedicalTurn?.productCategory?.name }}
+                  </span>
+                </td>
+                <td>
+                  <span class="badge badge-primary" [ngStyle]="{background: row.planningTurnStatus?.color}">
+                    <i class="fa {{ row.planningTurnStatus?.icon }}"></i> {{ row.planningTurnStatus?.name }}
+                  </span>
+
+                  <div class="overlay-edit">
+
+                    <button type="button" class="btn btn-icon btn-success" ngbPopover="Ver atención"
+                      *ngIf="row.planningTurnStatusId == planningTurnStatusEnum.Attended"
+                      (click)="goAttentionFormDetail(row)" placement="left" triggers="mouseenter:mouseleave">
+                      <i class="fa fa-hospital"></i>
+                    </button>
+
+                  </div>
+                </td>
+              </tr>
+            </ng-template>
+
+            <ng-template pTemplate="emptymessage" let-columns>
+              <tr>
+                <td [attr.colspan]="9">
+                  No records found
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </ui-admin-table>
+      </div>
+    </app-card>
+  </div>
+</div>

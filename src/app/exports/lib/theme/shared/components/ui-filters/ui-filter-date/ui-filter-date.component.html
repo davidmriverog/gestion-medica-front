@@ -1,0 +1,43 @@
+<div class="form-group" [formGroup]="form">
+
+    <div class="row">
+        <div class="col-12">
+            <ui-label [text]="label"></ui-label>
+        </div>
+    </div>
+
+    <div class="row">
+        
+        <div class="col-6">
+            <ui-label text="Criterio"></ui-label>  
+            <ui-dropdown bindLabel="label" bindValue="value"
+                [items]="filterOptions" [group]="form" formControlName="type">
+            </ui-dropdown>
+        </div>
+
+        <ng-template #hidden>
+            <input type="hidden" formControlName="type">
+        </ng-template>
+
+        <div class="col-6">
+
+            <ng-container *ngIf="form.get('type').value == filterTypesEnum.Equals || form.get('type').value == filterTypesEnum.NotEquals || form.get('type').value == filterTypesEnum.NotEquals || form.get('type').value == filterTypesEnum.GreatherThan || form.get('type').value == filterTypesEnum.LowerThanEquals else between">
+                <ui-form-date [group]="form" formControlName="value"></ui-form-date>    
+            </ng-container>
+
+            <ng-template #between>
+                <div class="row">
+                    <div class="col-6">
+                        <ui-label text="Desde"></ui-label>          
+                        <ui-form-date [group]="form" formControlName="from"></ui-form-date>
+                    </div>
+                    <div class="col-6">
+                        <ui-label text="Hasta"></ui-label>
+                        <ui-form-date [group]="form" formControlName="to"></ui-form-date>
+                    </div>
+                </div>
+            </ng-template>
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,27 @@
+:host ::ng-deep  .fc-time-grid-event .fc-time span {
+  display: none;
+}
+
+:host ::ng-deep  .fc-time-grid .fc-slats td {
+    height: 3.5em;
+    font-size: 9px;
+    font-weight: 600;
+    border-bottom: 0;
+}
+
+:host ::ng-deep .fc .fc-axis {
+    padding: 0;
+}
+
+:host ::ng-deep  .fc-toolbar.fc-header-toolbar {
+    display: none !important;
+}
+
+:host ::ng-deep  .fc-head {
+  display: none !important;
+}
+
+:host ::ng-deep .fc-unthemed th, .fc-unthemed td, .fc-unthemed thead, .fc-unthemed tbody, .fc-unthemed .fc-divider, .fc-unthemed .fc-row, .fc-unthemed .fc-content, .fc-unthemed .fc-popover, .fc-unthemed .fc-list-view, .fc-unthemed .fc-list-heading td {
+    width: 100%;
+}
+

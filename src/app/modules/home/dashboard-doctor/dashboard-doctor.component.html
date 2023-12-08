@@ -1,0 +1,169 @@
+<div class="row">
+  <div class="col-md-10 col-sm-12">
+
+    <app-card cardClass="card-datatable" [options]="false" [customHeader]="true">
+
+      <div class="app-card-header">
+          <h5>Lista de atenciones del día </h5> <span class="badge badge-success">{{ now | date: "dd-MM-yyyy" }}</span>
+          <div class="card-header-right">
+              <button type="button" class="btn btn-sm btn-info" (click)="refresh()">
+                  <span>Refrescar</span>
+              </button>
+          </div>
+      </div>
+
+      <div class="dt-responsive table-responsive">
+
+        <p-table [value]="(attentionLists$ | async)">
+            <ng-template pTemplate="header">
+              <tr>
+                <th scope="col">Cupo</th>
+                <th scope="col">Consultorio</th>
+                <th scope="col">Orden Venta</th>
+                <th scope="col">Tipo</th>
+                <th scope="col">Paciente</th>
+                <th scope="col">N. historia</th>
+                <th scope="col">Estado</th>
+                <th width="10%" class="text-center">Acciones</th>
+              </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-coupon>
+                <ng-template #notElement>
+                    -
+                </ng-template>
+
+                <tr>
+                    <td class="text-center">
+                        <span class="badge badge-danger" style="background: #8B008B;">{{ coupon.title }}</span>
+                    </td>
+
+                    <td class="text-center">
+                        <span class="badge badge-success">{{ coupon?.planningMedicalTurn?.medicalOffice?.officeName }}</span>
+                    </td>
+                    <td>
+                        <span class="badge badge-warning" *ngIf="(coupon.detail != null && coupon.detail.saleInfo != null && coupon.detail.saleInfo.orderSales != null) else notElement">
+                            {{ coupon.detail?.saleInfo?.orderSales }}
+                        </span>
+                    </td>
+                    <td>
+
+                      <span class="badge badge-primary" [ngClass]="{'badge-primary': coupon.planningMedicalTurn.productCategory.code == 'CONS', 'badge-danger': coupon.planningMedicalTurn.productCategory.code == 'PROC'}">
+
+                          {{ coupon.planningMedicalTurn?.productCategory?.name }}
+                      </span>
+
+                    </td>
+                    <td>
+                        {{ (coupon.detail != null && coupon.detail.patient != null) ? coupon.detail?.patient?.firstName+" "+ coupon.detail?.patient?.firstSurname : "-" }}
+                    </td>
+                    <td>
+                        <span class="badge badge-info" *ngIf="(coupon.detail != null && coupon.detail.patient != null) else notElement">
+                            {{ (coupon.detail != null && coupon.detail.patient != null) ? coupon.detail?.patient?.historyNumber : "-"}}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge badge-primary" [ngStyle]="{background: coupon.planningTurnStatus?.color}">
+                            <i class="fa {{ coupon.planningTurnStatus?.icon }}"></i> {{
+                            coupon.planningTurnStatus?.name }}
+                        </span>
+                    </td>
+
+                    <td>
+                        <div class="text-center">
+                            <button type="button" class="btn btn-sm btn-icon btn-primary" ngbPopover="Atender" *ngIf="(coupon?.planningTurnStatus?.code == planningTurnStatusEnum.PendingAttention) || (coupon?.planningTurnStatus?.code == planningTurnStatusEnum.Anulated && coupon?.detail?._id != null)"
+                                triggers="mouseenter:mouseleave" (click)="goAttention(coupon)" placement="left">
+                                <i class="fa fa-user-check"></i>
+                            </button>
+
+                            <button type="button" class="btn btn-sm btn-icon btn-success" ngbPopover="Ver atención" *ngIf="coupon?.planningTurnStatus?.code == planningTurnStatusEnum.Attended" (click)="goAttentionFormDetail(coupon)" placement="left" triggers="mouseenter:mouseleave">
+                                <i class="fa fa-hospital"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="emptymessage" let-columns>
+              <tr>
+                <td [attr.colspan]="8">
+                  <div class="alert alert-warning">
+                    <strong>Sin turnos para atender</strong>
+                  </div>
+                </td>
+              </tr>
+            </ng-template>
+        </p-table>
+      </div>
+    </app-card>
+
+  </div>
+
+  <div class="col-md-2 col-sm-12">
+    <div class="row">
+
+        <div class="col">
+          <app-card [hidHeader]="true" cardClass="bg-c-purple order-card">
+            <h6 class="text-white">Total</h6>
+            <h2 class="text-right text-white" style="font-size: 16px"><i class="fas fa-hospital float-left"></i>
+              <span>
+                {{ (dashboardIndicatorDoctor$ | async)?.total ?
+                (dashboardIndicatorDoctor$ | async)?.total : 0 }}
+              </span>
+            </h2>
+          </app-card>
+        </div>
+
+        <div class="col">
+          <app-card [hidHeader]="true" cardClass="available-turn order-card">
+            <h6 class="text-white">Disponible.</h6>
+            <h2 class="text-right text-white" style="font-size: 16px"><i class="fa fa-user float-left"></i>
+              <span>
+                {{ (dashboardIndicatorDoctor$ | async)?.available ?
+                (dashboardIndicatorDoctor$ | async)?.available : 0 }}
+              </span>
+            </h2>
+          </app-card>
+        </div>
+
+        <div class="col">
+          <app-card [hidHeader]="true" cardClass="pending-attention-turn order-card">
+            <h6 class="text-white">Por atender.</h6>
+            <h2 class="text-right text-white" style="font-size: 16px"><i class="fa fa-user float-left"></i>
+              <span>
+                {{ (dashboardIndicatorDoctor$ | async)?.pending ?
+                (dashboardIndicatorDoctor$ | async)?.pending : 0 }}
+              </span>
+            </h2>
+          </app-card>
+        </div>
+
+        <div class="col">
+          <app-card [hidHeader]="true" cardClass="attended-attention-turn order-card">
+            <h6 class="text-white">Atendidos</h6>
+            <h2 class="text-right text-white" style="font-size: 16px"><i class="fas fa-user-check float-left"></i>
+            <span>
+              {{ (dashboardIndicatorDoctor$ | async)?.attended ?
+                (dashboardIndicatorDoctor$ | async)?.attended : 0 }}
+            </span>
+            </h2>
+          </app-card>
+        </div>
+
+        <div class="col">
+          <app-card [hidHeader]="true" cardClass="anulated-attention-turn order-card">
+            <h6 class="text-white">Anulados</h6>
+            <h2 class="text-right text-white" style="font-size: 16px"><i class="fas fas fa-times  float-left"></i>
+              <span>
+                {{ (dashboardIndicatorDoctor$ | async)?.anulated ?
+                (dashboardIndicatorDoctor$ | async)?.anulated : 0 }}
+              </span>
+            </h2>
+          </app-card>
+        </div>
+
+      </div>
+  </div>
+</div>
+
+<hr>

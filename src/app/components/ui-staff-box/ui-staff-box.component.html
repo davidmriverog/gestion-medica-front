@@ -1,0 +1,19 @@
+<div class="row">
+  <div class="col">
+    <p-autoComplete [(ngModel)]="selectedValue" (onSelect)="select($event)" [disabled]="isSeleted"
+      [suggestions]="(filteredResult$ | async)" (onClear)="onClear($event)" [delay]="600"
+      (completeMethod)="search($event)" [minLength]="2" [forceSelection]="false" (onBlur)="onBlur($event)"
+      [showTransitionOptions]="'0ms'" [hideTransitionOptions]="'0ms'" field="fullName" inputStyleClass="form-control"
+      emptyMessage="Sin resultados">
+    </p-autoComplete>
+  </div>
+  <div class="col-auto">
+    <button type="button" class="btn btn-circle btn-success" style="margin-right: 2px;" (click)="create()">
+      <i class="feather icon-user-plus"></i>
+    </button>
+
+    <button type="button" class="btn btn-circle btn-danger" style="margin-right: 5px;" (click)="clearProviderSelect()">
+      <i class="fa fa-eraser"></i>
+    </button>
+  </div>
+</div>

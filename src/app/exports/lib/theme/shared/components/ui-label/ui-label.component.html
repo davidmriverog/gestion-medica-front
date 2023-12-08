@@ -1,0 +1,8 @@
+<label class="col-form-label" for="{{ name }}">
+    {{ _text + _posfix }}
+
+</label>
+
+<span *ngIf="message != ''" placement="top" [ngbTooltip]="message">
+	<i class="fa fa-info-circle"></i>
+</span>

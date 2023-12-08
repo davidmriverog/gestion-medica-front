@@ -1,0 +1,159 @@
+<div class="row">
+
+  <div class="col-md-12 col-sm-12">
+
+    <app-card cardClass="card-datatable" [options]="false" [customHeader]="true">
+
+      <div class="app-card-header">
+
+        <div class="card-header-right">
+
+          <button type="button" class="btn btn-xs btn-primary mr-2" (click)="goBack()">
+            <span>Regresar</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6 col-sm-12">
+
+          <label style="font-weight: 600;">Consultorio:</label>
+          <div class="form-group">
+            <span>{{ (medicalOffice$ | async)?.officeName }}</span>
+          </div>
+        </div>
+
+        <div class="col-md-3 col-sm-12">
+
+          <label style="font-weight: 600;">Nro.</label>
+          <div class="form-group">
+            <span>{{ (medicalOffice$ | async)?.officeNumber }}</span>
+          </div>
+        </div>
+
+        <div class="col-md-3 col-sm-12">
+
+          <label style="font-weight: 600;">Fecha de atención:</label>
+          <div class="form-group">
+            <span class="badge badge-success">{{ (date$ | async) }}</span>
+          </div>
+        </div>
+      </div>
+
+    </app-card>
+  </div>
+</div>
+
+<hr>
+
+<div class="row mb-3" *ngIf="displayProg">
+  <div class="col-12 text-center">
+    <button type="button" class="btn btn-xs btn-success ml-1" (click)="addProgramming()">
+      <span><i class="fa fa-user-md"></i> Añadir programación</span>
+    </button>
+  </div>
+</div>
+
+<div class="row">
+
+  <div class="col-12">
+
+    <app-card [hidHeader]="false" cardClass="card-datatable" customHeader="true">
+
+      <div class="app-card-header">
+        <h5>Listado de programaciones diarias</h5>
+        <div class="card-header-right">
+
+          <button type="button" class="btn btn-xs btn-warning ml-1" (click)="adminTable.refreshing()">
+            <span><i class="fa fa-redo"></i> Refrescar</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="dt-responsive">
+        <ui-admin-table #adminTable (refresh)="onRefresh($event)" [apiRecords]="(records$ | async)" [pageSize]="15">
+          <ng-template #contentFiltered>
+
+          </ng-template>
+
+          <p-table>
+            <ng-template pTemplate="header">
+              <tr>
+                <th scope="col">Medico / Profesional</th>
+                <th scope="col" width="15%">Especialidad</th>
+                <th scope="col" width="15%">Tipo</th>
+                <th scope="col">Cupos</th>
+                <th width="10%" scope="col">Estado</th>
+                <th width="15%" scope="col">Acciones</th>
+              </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-row>
+              <tr [pContextMenuRow]="row" [pSelectableRow]="row">
+                <td>
+                  <span class="badge badge-primary">
+                    {{ row.doctor.firstName }}, {{ row.doctor.firstSurname }}
+                  </span>
+                </td>
+                <td>
+                  <span class="badge badge-success" [ngStyle]="{background: row.speciality.color}">
+                    {{ row.speciality?.name }}
+                  </span>
+                </td>
+                <td>
+                  <span class="badge" [ngClass]="{'badge-primary': row.productCategory.code == 'CONS', 'badge-danger': row.productCategory.code == 'PROC'}">{{ row.productCategory?.name }}</span>
+                </td>
+                <td>
+
+                  <ng-container *ngFor="let coupon of row.coupons">
+
+                    <span class="badge badge-primary mr-2 mb-2"
+                      [ngStyle]="{background: coupon.planningTurnStatus?.color}">
+                      {{ coupon.title }}
+                    </span>
+                  </ng-container>
+                </td>
+                <td>
+                  <ng-container *ngIf="row.active else isRunning">
+                    <span class="badge badge-success">Activo</span>
+                  </ng-container>
+
+                  <ng-template #isRunning>
+                    <span class="badge badge-danger">Inactivo</span>
+                  </ng-template>
+                </td>
+                <td>
+                  <button type="button" class="btn btn-icon btn-info mr-2" ngbPopover="Ver detalle Prog."
+                    (click)="gotProgMedicalTurnDetail(row._id)" placement="left" triggers="mouseenter:mouseleave">
+                    <i class="fa fa-user"></i>
+                  </button>
+
+                  <button type="button" class="btn btn-icon btn-warning mr-2" ngbPopover="Inhabilitar"
+                    (click)="toggleActive(row._id, false)" placement="left" triggers="mouseenter:mouseleave"
+                    *ngIf="row.active">
+                    <i class="fa fa-lock"></i>
+                  </button>
+
+                  <button type="button" class="btn btn-icon btn-primary mr-2" ngbPopover="Habilitar"
+                    (click)="toggleActive(row._id, true)" placement="left" triggers="mouseenter:mouseleave"
+                    *ngIf="!row.active">
+                    <i class="fa fa-unlock"></i>
+                  </button>
+                </td>
+
+              </tr>
+            </ng-template>
+
+            <ng-template pTemplate="emptymessage" let-columns>
+              <tr>
+                <td [attr.colspan]="6">
+                  No records found
+                </td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </ui-admin-table>
+      </div>
+    </app-card>
+  </div>
+</div>

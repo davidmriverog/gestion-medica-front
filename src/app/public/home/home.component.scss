@@ -1,0 +1,35 @@
+.auth-content {
+  padding: 10%;
+  .auth-side-form {
+      align-items: unset;
+  }
+}
+
+:host ::ng-deep .card {
+  box-shadow: unset;
+  border: 1px solid #ccc;
+  &:hover {
+      box-shadow: 10px 3px 5px 1px rgba(0, 0, 0, 0.26);
+  }
+  .card-header {
+    text-align: center;
+    background: #fff;
+    .img-user-top {
+        width: 100px;
+        height: 100px;
+    }
+  }
+  .card-body {
+      padding: 5px !important;
+  }
+  .card-header {
+    padding: 10px;
+    background: #fff;
+  }
+  .card-footer {
+    padding: 10px 0px 0px 0px;
+    .btn {
+        border-radius: 20px;
+    }
+  }
+}

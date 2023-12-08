@@ -1,0 +1,64 @@
+<div class="modal-header">
+    <span class="modal-title">
+        Ver Adjuntos | {{ afterContentForm.title | uppercase }}
+    </span>
+</div>
+
+<div class="modal-body">
+
+    <div class="row">
+        <div class="col-12">
+            <strong>Medico responsable:</strong> <br>
+            <span class="badge badge-info">{{ afterContentForm.responsibleDoctor | uppercase }}</span>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+        <div class="col-12">
+            <table class="table table-row table-bordered">
+                <thead>
+                    <tr>
+                        <th>Archivo</th>
+                        <th style="width: 15%;">Extensión</th>
+                        <th style="width: 15%;"></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr *ngIf="afterContentForm.attachments.length == 0">
+                        <td colspan="3" style="width: 100%;">
+                            <div class="text text-center">
+                                <span>
+                                    Sin adjuntos</span>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr *ngFor="let item of afterContentForm.attachments; let i = index;">
+                        <td>{{ item.filename }}</td>
+                        <td>
+                            <span class="badge badge-success">{{ item.extension }}</span>
+                        </td>
+                        <td>
+                            <button class="btn btn-danger btn-circle" type="button"
+                                (click)="download(item._id, item.filename)">
+                                <i class="fa fa-download"></i> Descargar
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="modal-footer">
+    <div class="align-right">
+
+        <button class="btn btn-danger" (click)="activeModal.dismiss('Cross click')">
+            Salir
+        </button>
+    </div>
+</div>

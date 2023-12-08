@@ -1,0 +1,11 @@
+<div>
+    <textarea
+        class="form-control"
+        [ngClass]="{ 'input-validation-error is-invalid': formGroup && control && control.errors && (formGroup.touched || control.dirty || control.touched) }"
+        [(ngModel)]="value"
+        [rows]="rows"
+        [disabled]="disabled"
+        (input)="onInput($event)"
+        (change)="onChange($event.target.value)" #innerInput>
+    </textarea>
+</div>

@@ -1,0 +1,11 @@
+<div class="input-group">
+    <input type="text" class="form-control" [bsConfig]="bsConfigDate" #drp="bsDaterangepicker" bsDaterangepicker readonly
+        [(ngModel)]="valueSelected" (bsValueChange)="onChange($event)" [placeholder]="placeholder"
+        [ngClass]="{ 'is-invalid': control.dirty && control.errors }">
+
+    <div class="input-group-append">
+        <span class="input-group-text" (click)="drp.toggle()">
+            <i class="feather icon-calendar"></i>
+        </span>
+    </div>
+</div>
